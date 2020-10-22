@@ -3,6 +3,7 @@
 {root.api}/{version}/{grouping}/{endpoint}
 
 ### STANDART STATUS RESPONSE
+```sh
 200 - OK                    --> Call API Success.
 201 - CREATED               --> Post Success.
 400 - BAD REQUEST           --> Error on client side.
@@ -11,7 +12,7 @@
 404 - NOT FOUND             --> Request Endpoint not found.
 500 - INTERNAL SERVER ERROR --> Error on server side.
 502 - BAD GATEWAY           --> Invalid Response from another request.
-
+```
 
 ### GROUP : Authentication
 [1] - Register
