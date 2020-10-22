@@ -1,8 +1,8 @@
-STANDART API
+## STANDART API
 
 {root.api}/{version}/{grouping}/{endpoint}
 
-STANDART STATUS RESPONSE
+### STANDART STATUS RESPONSE
 200 - OK                    --> Call API Success.
 201 - CREATED               --> Post Success.
 400 - BAD REQUEST           --> Error on client side.
@@ -13,10 +13,11 @@ STANDART STATUS RESPONSE
 502 - BAD GATEWAY           --> Invalid Response from another request.
 
 
-GROUP : Authentication
+### GROUP : Authentication
 [1] - Register
 localhost/v1/auth/register
 
+```sh
 req:
 {
     "email": "test@gmail.com",
@@ -31,10 +32,12 @@ res:
         "email": "test@gmail.com"
     }
 }
+```
 
 [2] - Login
 localhost/v1/auth/login
 
+```sh
 req: 
 {
     "email": "test@gmail.com",
@@ -45,21 +48,26 @@ res:
 {
     "message": "Login Success",
 }
+```
 
-GROUP : Users
+### GROUP : Users
 [1] - List User
 localhost/v1/users
 
+```sh
 res:
 {
     "message": "Get data Success",
     "data": {
-        "users": {
-            "user_id": 1,
-            "email": "xxx@gmail.com"
-        }, {
-            "user_id": 2,
-            "email": "xxx@gmail.com"
-        }
+        "users": [
+            {
+                "user_id": 1,
+                "email": "xxx@gmail.com"
+            }, {
+                "user_id": 2,
+                "email": "xxx@gmail.com"
+            }   
+        ]
     }
 }
+```
