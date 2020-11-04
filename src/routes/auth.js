@@ -1,6 +1,5 @@
-var express = require("express");
-var app = express();
+const express = require("express");
 
-app.get("/login", (req, res, next) => {
-    res.json("");
-});
+const router = express.Router();
+
+const authController = require('../controllers/auth');

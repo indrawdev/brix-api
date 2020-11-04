@@ -1,10 +1,15 @@
-exports.getCashless = (req, res, next) => {
-
-}
-
 exports.listCashlesses = (req, res, next) => {
     
 }
+
+exports.getCashless = (req, res, next) => {
+    try {
+        
+    } catch (e) {
+        
+    }
+}
+
 
 exports.createCashless = (req, res, next) => {
 

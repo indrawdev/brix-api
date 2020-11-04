@@ -1,29 +1,26 @@
 const express = require("express");
 const bodyParser = require('body-parser');
 const cors = require('cors');
+
 const app = express();
-const mysql = require("mysql");
-
-const connection = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: '',
-    database: 'new_iboss'
-});
 
 const reimburseRoutes = require('./src/routes/reimburses');
-const reimburseRoutes = require('./src/routes/reimburses');
+const cashlessRoutes = require('./src/routes/cashlesses');
 
-connection.connect((err) => {
-    if (err) throw err;
-    
-    app.use(cors());
-    
-    app.use(bodyParser.json());
+const database = require("./src/models");
+database.sequelize.sync();
 
-    app.use('/', reimburseRoutes);
+const port = process.env.PORT || 8080;
 
-    app.listen(3000, () => {
-        console.log("Server running on port 3000");
-    });
+app.use(cors());
+
+app.use(bodyParser.json());
+
+// routes
+app.use('/v1', reimburseRoutes);
+app.use('/v1', cashlessRoutes);
+
+// running
+app.listen(port, () => {
+    console.log(`Server is running on port ${port}.`);
 });
