@@ -2,19 +2,23 @@ const { Sequelize, DataTypes } = require('sequelize')
 
 const sequelize = require('../utils/database')
 
-const Client = sequelize.define('Client', {
-    client_id: {
+const Insurance = sequelize.define('Insurance', {
+    insurance_id: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
         allowNull: false,
         primaryKey: true
     },
-    client_name: {
+    insurance_type: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+    insurance_name: {
         type: DataTypes.STRING,
         allowNull: false
     }
-}, {
-    tableName: 'm_clients'
+},{
+    tableName: 'm_insurances'
 })
 
-module.exports = Client
+module.exports = Insurance
