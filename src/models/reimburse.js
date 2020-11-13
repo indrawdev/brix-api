@@ -2,7 +2,7 @@ const { Sequelize, DataTypes } = require('sequelize')
 
 const sequelize = require('../utils/database')
 
-const Reimburse = sequelize.define('Reimburse', {
+const Reimburse = sequelize.define('t_claims', {
     claim_id: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
@@ -48,13 +48,14 @@ const Reimburse = sequelize.define('Reimburse', {
         type: DataTypes.DATEONLY
     },
     is_close: {
-        type: DataTypes.ENUM
+        type: DataTypes.STRING
     },
     is_active: {
-        type: DataTypes.ENUM
+        type: DataTypes.STRING
     }
 }, {
-    tableName: 't_claims'
+    tableName: 't_claims',
+    timestamps: false
 })
 
 module.exports = Reimburse

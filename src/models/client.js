@@ -2,7 +2,7 @@ const { Sequelize, DataTypes } = require('sequelize')
 
 const sequelize = require('../utils/database')
 
-const Client = sequelize.define('Client', {
+const Client = sequelize.define('m_clients', {
     client_id: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
@@ -14,7 +14,8 @@ const Client = sequelize.define('Client', {
         allowNull: false
     }
 }, {
-    tableName: 'm_clients'
+    tableName: 'm_clients',
+    timestamps: false
 })
 
 module.exports = Client

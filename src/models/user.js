@@ -2,7 +2,7 @@ const { Sequelize, DataTypes } = require('sequelize')
 
 const sequelize = require('../utils/database')
 
-const User = sequelize.define('User', {
+const User = sequelize.define('m_users_client', {
     userclient_id: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
@@ -26,8 +26,10 @@ const User = sequelize.define('User', {
         type: DataTypes.DATE
     },
     is_active: {
-        type: DataTypes.ENUM
+        type: DataTypes.STRING
     }
+}, {
+    timestamps: false
 })
 
 module.exports = User

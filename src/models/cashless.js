@@ -2,7 +2,7 @@ const { Sequelize, DataTypes } = require('sequelize')
 
 const sequelize = require('../utils/database')
 
-const Cashless = sequelize.define('Cashless', {
+const Cashless = sequelize.define('t_excess', {
     excess_id: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
@@ -42,13 +42,14 @@ const Cashless = sequelize.define('Cashless', {
         type: DataTypes.DATEONLY
     },
     is_close: {
-        type: DataTypes.ENUM
+        type: DataTypes.STRING
     },
     is_active: {
-        type: DataTypes.ENUM
+        type: DataTypes.STRING
     }
 },{
-    tableName: 't_excess'
+    tableName: 't_excess',
+    timestamps: false
 })
 
 module.exports = Cashless

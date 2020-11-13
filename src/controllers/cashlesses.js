@@ -1,3 +1,5 @@
+const Cashless = require('../models/cashless')
+
 exports.listCashlesses = (req, res, next) => {
     try {
         

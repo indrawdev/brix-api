@@ -27,7 +27,8 @@ const Member = sequelize.define('Member', {
         type: DataTypes.DATEONLY
     }
 },{
-    tableName: 'm_members'
+    tableName: 'm_members',
+    timestamps: false
 })
 
 module.exports = Member

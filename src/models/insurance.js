@@ -18,7 +18,8 @@ const Insurance = sequelize.define('Insurance', {
         allowNull: false
     }
 },{
-    tableName: 'm_insurances'
+    tableName: 'm_insurances',
+    timestamps: false
 })
 
 module.exports = Insurance
