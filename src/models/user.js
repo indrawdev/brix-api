@@ -1,8 +1,8 @@
-const { Sequelize, DataTypes } = require('sequelize')
+const { DataTypes } = require('sequelize')
 
 const sequelize = require('../utils/database')
 
-const User = sequelize.define('m_users_client', {
+const User = sequelize.define('users', {
     userclient_id: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
@@ -29,6 +29,7 @@ const User = sequelize.define('m_users_client', {
         type: DataTypes.STRING
     }
 }, {
+    tableName: 'm_users_client',
     timestamps: false
 })
 

@@ -1,8 +1,10 @@
 const Client = require('../models/client')
+const User = require('../models/user')
+const Policy = require('../models/policy')
 
 exports.getClient = (req, res, next) => { 
     const clientId = req.params.id
-    Client.findByPk(clientId)
+    Client.findByPk(clientId, { include: [User, Policy]})
         .then(client => {
             if (client) {
                 res.status(200).json({

@@ -1,3 +1,4 @@
+const jwt = require('jsonwebtoken')
 const User = require('../models/user')
 
 exports.signIn = (req, res, next) => {
@@ -12,6 +13,7 @@ exports.signIn = (req, res, next) => {
 }
 
 exports.signOut = (req, res, next) => {
+
     try {
         
     } catch (e) {

@@ -1,11 +1,10 @@
 const Cashless = require('../models/cashless')
 
 exports.listCashlesses = (req, res, next) => {
-    try {
+
+    Cashless.findAll(cashless => {
         
-    } catch (e) {
-        
-    }
+    }).then.catch({})
 }
 
 exports.getCashless = (req, res, next) => {

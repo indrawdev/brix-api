@@ -1,17 +1,13 @@
-const { Sequelize, DataTypes } = require('sequelize')
+const { DataTypes } = require('sequelize')
 
 const sequelize = require('../utils/database')
 
-const Policy = sequelize.define('m_policies', {
+const Policy = sequelize.define('policies', {
     policy_id: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
         allowNull: false,
         primaryKey: true
-    },
-    client_id: {
-        type: DataTypes.INTEGER,
-        allowNull: false
     },
     policy_number: {
         type: DataTypes.STRING,

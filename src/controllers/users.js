@@ -1,68 +1,59 @@
-const Policy = require('../models/policy')
+const User = require('../models/user')
 const Client = require('../models/client')
-const Insurance = require('../models/insurance')
 
-exports.listPolicies = (req, res, next) => { 
+// show all users
+exports.listUsers = (req, res, next) => {
 
-    Policy.findAll({ include: [Client, Insurance]})
-        .then(policies => {
-            if (policies) {
+    User.findAll({include: Client})
+        .then(users => {
+            if (users) {
                 res.status(200).json({
                     success: true,
-                    data: policies
+                    data: users
                 })
-                
                 next()
-
             } else {
                 res.status(404).json({
                     success: false,
                     message: 'Not found'
                 })
-
                 next()
             }
         })
         .catch(err => {
             res.status(400).json({
                 success: false,
-                message: err
+                data: err
             })
-        })
+            next()
+        });
 }
 
-exports.getPolicy = (req, res, next) => { 
+// show single user
+exports.getUser = (req, res, next) => {
+    const userId = req.params.id 
 
-    const policyId = req.params.id
-    
-    Policy.findByPk(policyId, { include: [Client, Insurance] })
-        .then(policy => {
-            if (policy) {
+    User.findByPk(userId, { include: Client })
+        .then(users => {
+            if (users) {
                 res.status(200).json({
                     success: true,
-                    data: policy
+                    data: users
                 })
+                next()
             } else {
                 res.status(404).json({
                     success: false,
                     message: 'Not found'
                 })
+                next()
             }
         })
         .catch(err => {
             res.status(400).json({
                 success: false,
-                message: err
+                data: err
             })
-        })
-}
-
-exports.getReimburse = (req, res, next) => {
-    const policyId = req.params.id
-    const code = req.params.code
-}
-
-exports.getCashless = (req, res, next) => { 
-    const policyId = req.params.id
-    const code = req.params.code
+            next()
+        });
 }
