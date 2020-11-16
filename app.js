@@ -1,3 +1,6 @@
+const http = require('http');
+const hostname = '103.76.15.148';
+
 const express = require("express");
 const bodyParser = require('body-parser');
 const cors = require('cors');
@@ -27,7 +30,6 @@ Cashless.belongsTo(Client, { foreignKey: 'client_id' })
 Policy.hasMany(Cashless, { foreignKey: 'policy_id' })
 Cashless.belongsTo(Policy, { foreignKey: 'policy_id' })
 
-
 const app = express();
 
 const authRoutes = require('./src/routes/auth');
@@ -38,7 +40,7 @@ const insuranceRoutes = require('./src/routes/insurances');
 const reimburseRoutes = require('./src/routes/reimburses');
 const cashlessRoutes = require('./src/routes/cashlesses');
 
-const port = process.env.PORT || 8080;
+const port = process.env.PORT || 3000;
 
 app.use(cors());
 
@@ -57,8 +59,8 @@ sequelize
     .sync({ force: false })
     .then(result => {
         // running
-        app.listen(port, () => {
-            console.log(`Server is running on port ${port}.`);
+        app.listen(port, hostname, () => {
+            console.log(`Server is running on port ${hostname} | ${port}.`);
         });
     })
     .catch(err => {

@@ -1,4 +1,6 @@
 const Policy = require('../models/policy')
+const Reimburse = require('../models/reimburse')
+const Cashless = require('../models/cashless')
 const Client = require('../models/client')
 const Insurance = require('../models/insurance')
 
@@ -60,9 +62,25 @@ exports.getPolicy = (req, res, next) => {
 exports.getReimburse = (req, res, next) => {
     const policyId = req.params.id
     const code = req.params.code
+
+    Reimburse.findOne({})
+        .then(reimburse => {
+
+        })
+        .catch({
+
+        })
+
 }
 
 exports.getCashless = (req, res, next) => { 
     const policyId = req.params.id
     const code = req.params.code
+
+    Cashless.findOne({ where: code })
+        .then(cashless => {
+
+        }).catch({
+
+        }) 
 }

@@ -72,3 +72,7 @@ res:
     }
 }
 ```
+
+'/users' // all
+'/user/:id' // by id
+
