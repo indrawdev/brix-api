@@ -1,5 +1,5 @@
 const http = require('http');
-const hostname = '103.76.15.148';
+const hostname = '127.0.0.1';
 
 const express = require("express");
 const bodyParser = require('body-parser');
@@ -46,6 +46,7 @@ app.use(cors());
 
 app.use(bodyParser.json())
 
+
 // routes
 app.use('/v1', authRoutes)
 app.use('/v1', userRoutes)
@@ -59,7 +60,7 @@ sequelize
     .sync({ force: false })
     .then(result => {
         // running
-        app.listen(port, hostname, () => {
+        app.listen(port, () => {
             console.log(`Server is running on port ${hostname} | ${port}.`);
         });
     })
