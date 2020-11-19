@@ -38,6 +38,7 @@ const policyRoutes = require('./src/routes/policies');
 const insuranceRoutes = require('./src/routes/insurances');
 const reimburseRoutes = require('./src/routes/reimburses');
 const cashlessRoutes = require('./src/routes/cashlesses');
+const memberRoutes = require('./src/routes/members');
 
 const port = process.env.PORT || 3000;
 
@@ -54,6 +55,7 @@ app.use('/v1', policyRoutes)
 app.use('/v1', insuranceRoutes)
 app.use('/v1', reimburseRoutes)
 app.use('/v1', cashlessRoutes)
+app.use('/v1', memberRoutes)
 
 sequelize
     .sync({ force: false })
