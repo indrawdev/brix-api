@@ -1,9 +1,10 @@
 const e = require('express')
+const Dependent = require('../models/dependent')
 const Member = require('../models/member')
 
 exports.listMembers = (req, res, next) => {
     const policyId = req.params.policyId
-    
+
     Member.findAll({ where: { policy_id: policyId, is_active: 1 }})
         .then(results => {
             res.status(200).json({ success: true, data: results })
@@ -30,5 +31,20 @@ exports.getMember = (req, res, next) => {
         })
         .catch(err => {
             res.status(400).json({ success: false, message: err })
+        })
+}
+
+exports.listDependent = (req, res, next) => {
+    const policyId = req.params.policyId
+    const memberId = req.params.memberId
+
+    Dependent.findAll({ where: { policy_id: policyId, member_id: memberId }})
+        .then(results => {
+            res.status(200).json({ success: true, data: results })
+            next()
+        })
+        .catch(err => {
+            res.status(400).json({ success: false, message: err })
+            next()
         })
 }
