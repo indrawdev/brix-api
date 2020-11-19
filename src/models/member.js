@@ -5,7 +5,18 @@ const sequelize = require('../utils/database')
 const Member = sequelize.define('member', {
     member_id: {
         type: DataTypes.INTEGER,
-        allowNull: false
+        allowNull: false,
+        primaryKey: true
+    },
+    client_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        primaryKey: true
+    },
+    policy_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        primaryKey: true
     },
     member_nik: {
         type: DataTypes.STRING,
