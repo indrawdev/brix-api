@@ -1,18 +1,36 @@
 const Cashless = require('../models/cashless')
 
 exports.listCashlesses = (req, res, next) => {
+    const policyId = req.params.policyId
 
-    Cashless.findAll(cashless => {
-        
-    }).then.catch({})
+    Cashless.findAll({ where: { policy_id : policyId, is_active: 1}})
+        .then(results => {
+            res.status(200).json({ success: true, data: results })
+            next()
+        })
+        .catch(err => {
+            res.status(400).json({ success: false, message: 'Error'})
+            next()
+        })
 }
 
 exports.getCashless = (req, res, next) => {
-    try {
-        
-    } catch (e) {
-        
-    }
+    const cashlessId = req.params.id
+
+    Cashless.findByPk(cashlessId)
+        .then(result => {
+            if (result) {
+                res.status(200).json({ success: true, data: result })
+                next()
+            } else {
+                res.status(404).json({ success: false, message: 'Not found' })
+                next()
+            }
+        })
+        .catch(err => {
+            res.status(400).json({ success: false, message: err })
+            next()
+        })
 }
 
 exports.createCashless = (req, res, next) => {

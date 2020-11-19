@@ -5,26 +5,12 @@ const Client = require('../models/client')
 exports.listUsers = (req, res, next) => {
 
     User.findAll({include: Client})
-        .then(users => {
-            if (users) {
-                res.status(200).json({
-                    success: true,
-                    data: users
-                })
-                next()
-            } else {
-                res.status(404).json({
-                    success: false,
-                    message: 'Not found'
-                })
-                next()
-            }
+        .then(results => {
+            res.status(200).json({ success: true, data: results })
+            next()
         })
         .catch(err => {
-            res.status(400).json({
-                success: false,
-                data: err
-            })
+            res.status(400).json({ success: false, data: err })
             next()
         });
 }
@@ -33,27 +19,18 @@ exports.listUsers = (req, res, next) => {
 exports.getUser = (req, res, next) => {
     const userId = req.params.id 
 
-    User.findByPk(userId, { include: Client })
-        .then(users => {
-            if (users) {
-                res.status(200).json({
-                    success: true,
-                    data: users
-                })
+    User.findByPk(userId, { include: [Client, Policy] })
+        .then(result => {
+            if (result) {
+                res.status(200).json({ success: true, data: result })
                 next()
             } else {
-                res.status(404).json({
-                    success: false,
-                    message: 'Not found'
-                })
+                res.status(404).json({ success: false, message: 'Not found' })
                 next()
             }
         })
         .catch(err => {
-            res.status(400).json({
-                success: false,
-                data: err
-            })
+            res.status(400).json({ success: false, message: err })
             next()
         });
 }
