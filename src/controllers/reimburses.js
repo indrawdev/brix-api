@@ -1,4 +1,7 @@
 const Reimburse = require('../models/reimburse')
+const Client = require('../models/client')
+const Policy = require('../models/policy')
+const { purge } = require('../routes/auth')
 
 // show all reimburses
 exports.listReimburses = (req, res, next) => {
@@ -21,7 +24,7 @@ exports.getReimburse = (req, res, next) => {
     
     const reimburseId = req.params.id
 
-    Reimburse.findByPk(reimburseId)
+    Reimburse.findByPk(reimburseId, { include: [Client, Policy]})
         .then(result => {
             if (result) {
                 res.status(200).json({ success: true, data: result })
@@ -34,6 +37,10 @@ exports.getReimburse = (req, res, next) => {
         .catch(err => { 
             res.status(400).json({ success: false, message: err })
         })
+}
+
+exports.listMembers = (req, res, next) => {
+    const code = req.params.batch
 }
 
 exports.createReimburse = (req, res, next) => {

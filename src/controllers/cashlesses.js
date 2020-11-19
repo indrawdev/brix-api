@@ -1,4 +1,6 @@
 const Cashless = require('../models/cashless')
+const Client = require('../models/client')
+const Policy = require('../models/policy')
 
 exports.listCashlesses = (req, res, next) => {
     const policyId = req.params.policyId
@@ -17,7 +19,7 @@ exports.listCashlesses = (req, res, next) => {
 exports.getCashless = (req, res, next) => {
     const cashlessId = req.params.id
 
-    Cashless.findByPk(cashlessId)
+    Cashless.findByPk(cashlessId, { include: [Client, Policy]})
         .then(result => {
             if (result) {
                 res.status(200).json({ success: true, data: result })

@@ -19,7 +19,7 @@ exports.listUsers = (req, res, next) => {
 exports.getUser = (req, res, next) => {
     const userId = req.params.id 
 
-    User.findByPk(userId, { include: [Client, Policy] })
+    User.findByPk(userId, { include: Client })
         .then(result => {
             if (result) {
                 res.status(200).json({ success: true, data: result })

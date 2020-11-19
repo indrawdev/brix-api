@@ -2,7 +2,7 @@ const { DataTypes } = require('sequelize')
 
 const sequelize = require('../utils/database')
 
-const Cashless = sequelize.define('t_excess', {
+const Cashless = sequelize.define('cashless', {
     excess_id: {
         type: DataTypes.INTEGER,
         autoIncrement: true,

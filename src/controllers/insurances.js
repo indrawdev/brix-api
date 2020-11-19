@@ -16,8 +16,7 @@ exports.getInsurance = (req, res, next) => {
     
     const insuranceId = req.params.id
 
-    try {
-        Insurance.findByPk(insuranceId, { include: Policy })
+    Insurance.findByPk(insuranceId, { include: Policy })
         .then(result => {
             if (result) {
                 res.status(200).json({ success: true, data: result })
@@ -31,8 +30,4 @@ exports.getInsurance = (req, res, next) => {
             res.status(400).json({ success: false, message: err })
             next()
         })   
-    } catch (err) {
-        res.status(500).json({ success: false, message: err })
-        next()        
-    }
 }
