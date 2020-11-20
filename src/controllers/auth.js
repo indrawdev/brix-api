@@ -44,10 +44,5 @@ exports.refreshToken = (req, res, next) => {
 }
 
 exports.signOut = (req, res, next) => {
-
-    try {
-        
-    } catch (e) {
-        
-    }
+    
 }

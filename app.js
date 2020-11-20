@@ -46,7 +46,6 @@ app.use(cors());
 
 app.use(bodyParser.json())
 
-
 // routes
 app.use('/v1', authRoutes)
 app.use('/v1', userRoutes)
