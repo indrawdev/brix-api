@@ -1,108 +1,93 @@
 const Reimburse = require('../models/reimburse')
+const Client = require('../models/client')
+const Policy = require('../models/policy')
+const ReimburseMember = require('../models/reimburseMember')
 
 // show all reimburses
 exports.listReimburses = (req, res, next) => {
 
-    Reimburse.findAll()
-        .then(reimburses => {
-            if (reimburses) {
-                res.status(200).json({
-                    success: true,
-                    data: reimburses
-                })
-                next()
-            } else {
-                res.status(404).json({
-                    success: false,
-                    message: 'Not found'
-                })
-                next()
-            }
-        })
-        .catch(err => {
-            res.status(400).json({
-                success: false,
-                data: err
-            })
-            next()
-        });
+    const policyId = req.params.policyId
+
+    let page    = parseInt(req.query.page)
+    let limit   = parseInt(req.query.limit)
+    let offset  = 0 + (page - 1) * limit
+
+    Reimburse.findAndCountAll({ 
+        where: { policy_id: policyId, is_active: 1 }, 
+        order: [
+            ['claim_id', 'DESC']
+        ],
+        offset: offset, limit: limit
+    })
+    .then(results => {
+        res.status(200).json({ success: true, data: results })
+        next()
+    })
+    .catch(err => {
+        res.status(400).json({ success: false, data: err })
+        next()
+    });
 }
 
 // show single reimburse
 exports.getReimburse = (req, res, next) => {
     
     const reimburseId = req.params.id
-    Reimburse.findByPk(reimburseId)
-        .then(product => {
-            if (product) {
-                res.status(200).json({
-                    success: true,
-                    data: product
-                })
-                next()
-            } else {
-                res.status(404).json({
-                    success: false,
-                    message: 'Not found'
-                })
-                next()
-            }
-        })
-        .catch(err => { 
-            console.log(err)
-            res.status(400).json({
-                success: false,
-                data: err
-            })
-        })
+
+    Reimburse.findByPk(reimburseId, { 
+        include: [Client, Policy]
+    })
+    .then(result => {
+        if (result) {
+            res.status(200).json({ success: true, data: result })
+            next()
+        } else {
+            res.status(404).json({ success: false, message: 'Not found' })
+            next()
+        }
+    })
+    .catch(err => { 
+        res.status(400).json({ success: false, message: err })
+    })
 }
 
-// insert new reimburse
+exports.listDetails = (req, res, next) => {
+    const batch = req.params.batch
+
+    let page    = parseInt(req.query.page)
+    let limit   = parseInt(req.query.limit)
+    let offset  = 0 + (page - 1) * limit
+
+    ReimburseMember.findAndCountAll({
+        where: { batch_code: batch },
+        order: [
+            ['created_at', 'DESC']
+        ],
+        offset: offset, limit: limit
+    })
+    .then(results => {
+        res.status(200).json({ success: true, data: results })
+        next()
+    })
+    .catch(err => {
+        res.status(400).json({ success: false, data: err })
+        next()
+    })
+}
+
+exports.listMembers = (req, res, next) => {
+    const code = req.params.batch
+    
+}
+
 exports.createReimburse = (req, res, next) => {
-    // let data = {
-    //     client_id: req.body.client_id,
-    //     policy_id: req.body.policy_id,
-    //     member_id: req.body.member_id,
-    //     amount: req.body.amount,
-    // };
 
-    // let sql = "INSERT INTO t_claims SET ?";
-
-    // conn.query(sql, data, (err, results) => { 
-    //     res.json(
-    //         {
-    //             success: true,
-    //             messages: 'Create reimburse success',
-    //             data: results
-    //         }
-    //     );
-    //     next();
-    // });
 }
 
 exports.editReimburse = (req, res, next) => {
-    // let sql = "UPDATE t_claims SET ? WHERE ?";
-    // conn.query(sql, data, (err, results) => { 
-    //     res.json(
-    //         {
-    //             success: true,
-    //             messages: 'Update data reimburse',
-    //             data: results
-    //         }
-    //     );
-    //     next();
-    // });
+
 }
 
 exports.deleteReimburse = (req, res, next) => {
-    // res.json(
-    //     {
-    //         success: true,
-    //         messages: 'Delete data reimburse',
-    //         data: {
 
-    //         }
-    //     }
-    // );
-    // next();
 }

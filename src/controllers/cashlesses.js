@@ -1,18 +1,75 @@
 const Cashless = require('../models/cashless')
+const Client = require('../models/client')
+const Policy = require('../models/policy')
+const CashlessMember = require('../models/cashlessMember')
 
 exports.listCashlesses = (req, res, next) => {
+    const policyId = req.params.policyId
 
-    Cashless.findAll(cashless => {
-        
-    }).then.catch({})
+    let page    = parseInt(req.query.page)
+    let limit   = parseInt(req.query.limit)
+    let offset  = 0 + (page - 1) * limit
+
+    Cashless.findAndCountAll({ 
+        where: { policy_id : policyId, is_active: 1 }, 
+        order: [
+            ['excess_id', 'DESC']
+        ], 
+        offset: offset, limit: limit 
+    })
+    .then(results => {
+        res.status(200).json({ success: true, data: results })
+        next()
+    })
+    .catch(err => {
+        res.status(400).json({ success: false, message: 'Error'})
+        next()
+    })
 }
 
 exports.getCashless = (req, res, next) => {
-    try {
-        
-    } catch (e) {
-        
-    }
+    const cashlessId = req.params.id
+
+    Cashless.findByPk(cashlessId, { 
+        include: [Client, Policy]
+    })
+    .then(result => {
+        if (result) {
+            res.status(200).json({ success: true, data: result })
+            next()
+        } else {
+            res.status(404).json({ success: false, message: 'Not found' })
+            next()
+        }
+    })
+    .catch(err => {
+        res.status(400).json({ success: false, message: err })
+        next()
+    })
+}
+
+exports.listDetails = (req, res, next) => {
+    const batch = req.params.batch
+
+    let page    = parseInt(req.query.page)
+    let limit   = parseInt(req.query.limit)
+    let offset  = 0 + (page - 1) * limit
+
+    CashlessMember.findAndCountAll({
+        where: { batch_code: batch },
+        order: [
+            ['created_at', 'DESC']
+        ],
+        offset: offset, limit: limit
+    })
+    .then(results => {
+        res.status(200).json({ success: true, data: results })
+        next()
+    })
+    .catch(err => {
+        res.status(400).json({ success: false, data: err })
+        next()
+    })
 }
 
 exports.createCashless = (req, res, next) => {
