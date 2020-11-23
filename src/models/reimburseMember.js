@@ -1,6 +1,6 @@
 const { DataTypes } = require('sequelize')
 
-const sequelize = require('../utils/database')
+const sequelize = require('../config/database')
 
 const ReimburseMember = sequelize.define('reimburse_member', {
     batch_code: {

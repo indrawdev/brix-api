@@ -1,6 +1,6 @@
 const { DataTypes } = require('sequelize')
 
-const sequelize = require('../utils/database')
+const sequelize = require('../config/database')
 
 const Cashless = sequelize.define('cashless', {
     excess_id: {

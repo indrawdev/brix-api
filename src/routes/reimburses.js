@@ -1,15 +1,16 @@
-const express = require("express");
+const express = require('express')
 
-const router = express.Router();
+const router = express.Router()
 
-const reimbursesController = require('../controllers/reimburses');
+const reimbursesController = require('../controllers/reimburses')
+const { verify } = require('../middlewares/verify')
 
-router.get('/policy/:policyId/reimburses', reimbursesController.listReimburses);
-router.get('/reimburse/:id', reimbursesController.getReimburse);
-router.get('/reimburse/details/:batch', reimbursesController.listDetails);
+router.get('/policy/:policyId/reimburses', verify, reimbursesController.listReimburses)
+router.get('/reimburse/:id', verify, reimbursesController.getReimburse)
+router.get('/reimburse/details/:batch', verify, reimbursesController.listDetails)
 
-router.post('/reimburses', reimbursesController.createReimburse);
-router.put('/reimburse/:id', reimbursesController.editReimburse);
-router.delete('/reimburse/:id', reimbursesController.deleteReimburse);
+router.post('/reimburses', verify, reimbursesController.createReimburse)
+router.put('/reimburse/:id', verify, reimbursesController.editReimburse)
+router.delete('/reimburse/:id', verify, reimbursesController.deleteReimburse)
 
-module.exports = router;
+module.exports = router

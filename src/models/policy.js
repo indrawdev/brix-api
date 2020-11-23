@@ -1,6 +1,6 @@
 const { DataTypes } = require('sequelize')
 
-const sequelize = require('../utils/database')
+const sequelize = require('../config/database')
 
 const Policy = sequelize.define('policies', {
     policy_id: {

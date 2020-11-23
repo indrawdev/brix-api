@@ -1,6 +1,6 @@
 const { DataTypes } = require('sequelize')
 
-const sequelize = require('../utils/database')
+const sequelize = require('../config/database')
 
 const CashlessMember = sequelize.define('cashless_member', {
     batch_code: {
