@@ -45,6 +45,7 @@ const port = process.env.PORT || 3000;
 app.use(cors());
 
 app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: true }))
 
 // routes
 app.use('/v1', authRoutes)
