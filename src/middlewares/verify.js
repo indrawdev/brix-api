@@ -4,7 +4,7 @@ dotenv.config()
 const jwt = require('jsonwebtoken')
 
 exports.verify = (req, res, next) => {
-    if (req.headers.authorization !== "undefined") {
+    if (typeof req.headers.authorization !== "undefined") {
         let accessToken = req.headers.authorization.split(" ")[1]
 
         jwt.verify(accessToken, process.env.TOKEN_SECRET, (err, user) => {
