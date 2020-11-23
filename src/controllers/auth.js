@@ -100,5 +100,17 @@ exports.me = (req, res, next) => {
 exports.signOut = (req, res, next) => {
     if (typeof req.headers.authorization !== "undefined") {
         const currentToken = req.headers.authorization.split(" ")[1]
+        try {
+            const data = jwt.verify(currentToken, process.env.ACCESS_TOKEN_SECRET);
+            res.status(200).json({ success: true, message: 'Signout success', data: data})
+            next()
+        } catch(err) {
+            res.status(500).json({ success: false, message: 'Failed to authenticate token' })
+            next()
+        }
+    } else {
+        res.status(500).json({ error: "Not Authorized" })
+        next()
     }
+    
 }
