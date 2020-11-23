@@ -45,7 +45,7 @@ const port = process.env.PORT || 3000;
 app.use(cors());
 
 app.use(bodyParser.json())
-app.use(bodyParser.text({ extended: true }))
+app.use(bodyParser.text({ type: 'text/html' }))
 app.use(bodyParser.urlencoded({ extended: true }))
 
 // routes
