@@ -1,7 +1,7 @@
 const User = require('../models/user')
 const Client = require('../models/client')
 const Policy = require('../models/policy')
-const Insurance = require('../models/Insurance')
+const Insurance = require('../models/insurance')
 
 // show all users
 exports.listUsers = (req, res, next) => {
