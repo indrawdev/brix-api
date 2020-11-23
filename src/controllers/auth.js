@@ -5,8 +5,6 @@ const md5 = require('md5')
 const jwt = require('jsonwebtoken')
 const User = require('../models/user')
 
-const accessTokenSecret = process.env.TOKEN_SECRET
-
 exports.signIn = (req, res, next) => {
 
     const email = req.body.email
@@ -86,7 +84,7 @@ exports.me = (req, res, next) => {
         const currentToken = req.headers.authorization.split(" ")[1]
 
         try {
-            const data = jwt.verify(currentToken, process.env.TOKEN_SECRET);
+            const data = jwt.verify(currentToken, process.env.ACCESS_TOKEN_SECRET);
             res.status(200).json({ success: false, data: data })
             next()
         } catch(err) {
