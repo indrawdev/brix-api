@@ -2,6 +2,8 @@ const hostname = '127.0.0.1';
 
 const express = require("express");
 const bodyParser = require('body-parser');
+const multer = require('multer');
+const upload = multer();
 const cors = require('cors');
 
 const sequelize = require('./src/utils/database')
@@ -44,9 +46,10 @@ const port = process.env.PORT || 3000;
 
 app.use(cors());
 
-app.use(bodyParser.json())
-app.use(bodyParser.text({ type: 'text/html' }))
+app.use(bodyParser.text({ extended: true }))
 app.use(bodyParser.urlencoded({ extended: true }))
+app.use(bodyParser.json())
+app.use(upload.array())
 
 // routes
 app.use('/v1', authRoutes)
