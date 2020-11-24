@@ -29,7 +29,7 @@ const Client = sequelize.define('clients', {
         type: DataTypes.STRING,
         allowNull: true
     },
-    client_phone1: {
+    client_phone2: {
         type: DataTypes.STRING,
         allowNull: true
     },
