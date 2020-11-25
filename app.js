@@ -1,10 +1,15 @@
-const hostname = '127.0.0.1';
+const dotenv = require('dotenv')
+dotenv.config()
+
+const hostname = process.env.APP_HOST;
 
 const express = require("express");
 const bodyParser = require('body-parser');
+const multer = require('multer');
+const upload = multer();
 const cors = require('cors');
 
-const sequelize = require('./src/utils/database')
+const sequelize = require('./src/config/database')
 
 const User = require('./src/models/user')
 const Client = require('./src/models/client')
@@ -40,11 +45,14 @@ const reimburseRoutes = require('./src/routes/reimburses');
 const cashlessRoutes = require('./src/routes/cashlesses');
 const memberRoutes = require('./src/routes/members');
 
-const port = process.env.PORT || 3000;
+const port = process.env.APP_PORT || 3000;
 
 app.use(cors());
 
+app.use(bodyParser.text({ extended: true }))
+app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
+app.use(upload.array()); 
 
 // routes
 app.use('/v1', authRoutes)

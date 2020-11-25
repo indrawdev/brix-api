@@ -1,10 +1,11 @@
-const express = require("express");
+const express = require("express")
 
-const router = express.Router();
+const router = express.Router()
 
-const clientsController = require('../controllers/clients');
+const clientsController = require('../controllers/clients')
+const { verify } = require('../middlewares/verify')
 
-router.get('/clients', clientsController.listClients);
-router.get('/client/:id', clientsController.getClient);
+router.get('/clients', verify, clientsController.listClients)
+router.get('/client/:id', verify, clientsController.getClient)
 
-module.exports = router;
+module.exports = router
