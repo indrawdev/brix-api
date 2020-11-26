@@ -1,3 +1,4 @@
+const { Op } = require('sequelize')
 const Reimburse = require('../models/reimburse')
 const Client = require('../models/client')
 const Policy = require('../models/policy')
@@ -57,9 +58,15 @@ exports.listDetails = (req, res, next) => {
     let page    = parseInt(req.query.page)
     let limit   = parseInt(req.query.limit)
     let offset  = 0 + (page - 1) * limit
+    let search  = req.query.search
 
     ReimburseMember.findAndCountAll({
-        where: { batch_code: batch },
+        where: {
+            batch_code: batch,
+            member_name: {
+                [Op.like]: `%${search}%`
+            }
+        },
         order: [
             ['created_at', 'DESC']
         ],
