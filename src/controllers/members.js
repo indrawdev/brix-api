@@ -5,9 +5,8 @@ const Member = require('../models/member')
 exports.listMembers = (req, res, next) => {
     const policyId = req.params.policyId
 
-    let page    = parseInt(req.query.page)
+    let offset    = parseInt(req.query.offset)
     let limit   = parseInt(req.query.limit)
-    let offset  = 0 + (page - 1) * limit
 
     Member.findAndCountAll({ 
         where: { policy_id: policyId, is_active: 1 },

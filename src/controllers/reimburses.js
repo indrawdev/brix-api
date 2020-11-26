@@ -9,9 +9,8 @@ exports.listReimburses = (req, res, next) => {
 
     const policyId = req.params.policyId
 
-    let page    = parseInt(req.query.page)
+    let offset  = parseInt(req.query.offset)
     let limit   = parseInt(req.query.limit)
-    let offset  = 0 + (page - 1) * limit
 
     Reimburse.findAndCountAll({ 
         where: { policy_id: policyId, is_active: 1 }, 
@@ -55,9 +54,8 @@ exports.getReimburse = (req, res, next) => {
 exports.listDetails = (req, res, next) => {
     const batch = req.params.batch
 
-    let page    = parseInt(req.query.page)
+    let offset    = parseInt(req.query.offset)
     let limit   = parseInt(req.query.limit)
-    let offset  = 0 + (page - 1) * limit
     let search  = req.query.search
 
     ReimburseMember.findAndCountAll({
