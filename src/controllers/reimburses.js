@@ -11,7 +11,6 @@ exports.listReimburses = (req, res, next) => {
 
     let offset = parseInt(req.query.offset)
     let limit = parseInt(req.query.limit)
-    let search = req.query.search
 
     Reimburse.findAndCountAll({
         include: ReimburseMember,
