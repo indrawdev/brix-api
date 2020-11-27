@@ -91,6 +91,7 @@ exports.listMembers = (req, res, next) => {
     ReimburseMember.findAndCountAll({
         include: {
             model: Reimburse,
+            attributes: ['batch_code'],
             where: {
                 policy_id: policyId,
                 is_active: 1

@@ -88,6 +88,7 @@ exports.listMembers = (req, res, next) => {
     CashlessMember.findAndCountAll({
         include: {
             model: Cashless,
+            attributes: ['batch_code'],
             where: {
                 policy_id: policyId,
                 is_active: 1
