@@ -8,6 +8,7 @@ const { verify } = require('../middlewares/verify')
 router.get('/policy/:policyId/cashlesses', verify, cashlessesController.listCashlesses)
 router.get('/cashless/:id', verify, cashlessesController.getCashless)
 router.get('/cashless/details/:batch', verify, cashlessesController.listDetails)
+router.get('/policy/:policyId/cashlesses/members', verify, cashlessesController.listMembers)
 
 router.post('/cashlesses', cashlessesController.createCashless)
 router.put('/cashless/:id', cashlessesController.editCashless)

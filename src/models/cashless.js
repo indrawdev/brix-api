@@ -11,7 +11,8 @@ const Cashless = sequelize.define('cashless', {
     },
     batch_code: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
+        primaryKey: true
     },
     currency: {
         type: DataTypes.STRING,

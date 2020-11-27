@@ -8,9 +8,11 @@ exports.listCashlesses = (req, res, next) => {
     const policyId = req.params.policyId
 
     let offset = parseInt(req.query.offset)
-    let limit  = parseInt(req.query.limit)
+    let limit = parseInt(req.query.limit)
+    let search = req.query.search
 
-    Cashless.findAndCountAll({ 
+    Cashless.findAndCountAll({
+        include: CashlessMember,
         where: { policy_id : policyId, is_active: 1 }, 
         order: [
             ['excess_id', 'DESC']
@@ -72,6 +74,41 @@ exports.listDetails = (req, res, next) => {
         next()
     })
     .catch(err => {
+        res.status(400).json({ success: false, data: err })
+        next()
+    })
+}
+
+exports.listMembers = (req, res, next) => {
+    const policyId = req.params.policyId
+
+    let offset = parseInt(req.query.offset)
+    let limit = parseInt(req.query.limit)
+    let search = req.query.search
+
+    CashlessMember.findAndCountAll({
+        include: {
+            model: Cashless,
+            where: {
+                policy_id: policyId,
+                is_active: 1
+            }
+        },
+        where: {
+            member_name: {
+                [Op.like]: `%${search}%`
+            }
+        },
+        order: [
+            ['created_at', 'DESC']
+        ],
+        offset: offset, limit: limit
+    })
+    .then(results => { 
+        res.status(200).json({ success: true, data: results })
+        next()
+    })
+    .catch(err => { 
         res.status(400).json({ success: false, data: err })
         next()
     })
