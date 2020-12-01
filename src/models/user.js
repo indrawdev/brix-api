@@ -28,6 +28,9 @@ const User = sequelize.define('users', {
     last_login: {
         type: DataTypes.DATE
     },
+    change_pass: {
+        type: DataTypes.DATE
+    },
     is_active: {
         type: DataTypes.STRING
     }

@@ -31,6 +31,14 @@ exports.signIn = (req, res, next) => {
                 let refreshToken = jwt.sign(payload, process.env.REFRESH_TOKEN_SECRET, {
                     expiresIn: process.env.REFRESH_TOKEN_LIFE
                 })
+
+                User.update({
+                   last_login: new Date(Date.now()).toISOString()
+                }, {
+                    where: {
+                        userclient_id: result.userclient_id
+                    }
+                })
                 
                 res.status(200).json({ success: true, accessToken: accessToken, refreshToken: refreshToken, data: result })
                 next()
