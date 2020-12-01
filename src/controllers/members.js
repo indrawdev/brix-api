@@ -3,7 +3,7 @@ const Member = require('../models/member')
 const Dependent = require('../models/dependent')
 
 exports.listMembers = (req, res, next) => {
-    const policyId = req.params.policyId
+    const policyId = parseInt(req.params.policyId)
 
     let offset = parseInt(req.query.offset)
     let limit = parseInt(req.query.limit)
@@ -11,7 +11,7 @@ exports.listMembers = (req, res, next) => {
 
     Member.findAndCountAll({ 
         where: {
-            policy_id: policyId, is_active: 1,
+            policy_id: policyId, is_active: '1',
             member_name: {
                 [Op.like]: `%${search}%`
             }
@@ -50,7 +50,8 @@ exports.getMember = (req, res, next) => {
 }
 
 exports.listDependents = (req, res, next) => {
-    const policyId = req.params.policyId
+    const policyId = parseInt(req.params.policyId)
+
     const nik = req.params.nik
     let search = req.query.search
 
@@ -73,8 +74,8 @@ exports.listDependents = (req, res, next) => {
 }
 
 exports.getDependent = (req, res, next) => {
-    const policyId = req.params.policyId
-    const memberId = req.params.memberId
+    const policyId = parseInt(req.params.policyId)
+    const memberId = parseInt(req.params.memberId)
 
     Dependent.findOne({
         where: { policy_id: policyId, member_id: memberId }
@@ -91,5 +92,34 @@ exports.getDependent = (req, res, next) => {
     .catch(err => {
         res.status(400).json({ success: false, message: err })
         next()
+    })
+}
+
+exports.listMembersAndDependents = (req, res, next) => { 
+    const policyId = parseInt(req.params.policyId)
+
+    Member.findAndCountAll({
+        include: {
+            model: Dependent,
+            attributes: ['member_name', 'member_dob', 'member_gender', 'member_relation', 'member_effective'],
+            where: {
+                policy_id: policyId,
+                is_active: '1'
+            }
+        },
+        attributes: ['member_name', 'member_dob', 'member_gender', 'member_marital', 'member_join', 'member_effective'],
+        where: {
+            policy_id: policyId, is_active: '1'
+        },
+        order: [
+            ['member_id', 'DESC']
+        ]
+    })
+    .then(results => {
+        res.status(200).json({ success: true, data: results })
+        next()
+    })
+    .catch(err => {
+        res.status(400).json({ success: false, message: err })
     })
 }

@@ -19,6 +19,8 @@ const Reimburse = require('./src/models/reimburse')
 const ReimburseMember = require('./src/models/reimburseMember')
 const Cashless = require('./src/models/cashless')
 const CashlessMember = require('./src/models/cashlessMember')
+const Member = require('./src/models/member')
+const Dependent = require('./src/models/dependent')
 
 // Associations
 Client.hasMany(User, { foreignKey: 'client_id' })
@@ -39,6 +41,8 @@ Reimburse.hasMany(ReimburseMember, { foreignKey: 'batch_code', sourceKey: 'batch
 ReimburseMember.belongsTo(Reimburse, { foreignKey: 'batch_code', targetKey: 'batch_code' })
 Cashless.hasMany(CashlessMember, { foreignKey: 'batch_code', sourceKey: 'batch_code' })
 CashlessMember.belongsTo(Cashless, { foreignKey: 'batch_code', targetKey: 'batch_code' })
+Member.hasMany(Dependent, { foreignKey: 'member_nik', sourceKey: 'member_nik' })
+Dependent.belongsTo(Member, { foreignKey: 'member_nik', targetKey: 'member_nik' })
 
 const app = express();
 
