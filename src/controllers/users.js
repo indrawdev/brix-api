@@ -90,7 +90,7 @@ exports.updatePassword =  async (req, res, next) => {
                         userclient_email: currentUser.userclient_email
                     }
                 })
-                res.status(200).json({ success: true, data: checkPass })
+                res.status(200).json({ success: true, message: 'Password updated', data: checkPass })
                 next()
             }
         } else {
