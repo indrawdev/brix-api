@@ -53,6 +53,9 @@ const Reimburse = sequelize.define('reimburse', {
     },
     is_active: {
         type: DataTypes.STRING
+    },
+    created_at: {
+        type: DataTypes.DATE
     }
 }, {
     tableName: 't_claims',

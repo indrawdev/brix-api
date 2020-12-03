@@ -47,6 +47,9 @@ const Cashless = sequelize.define('cashless', {
     },
     is_active: {
         type: DataTypes.STRING
+    },
+    created_at: {
+        type: DataTypes.DATE
     }
 },{
     tableName: 't_excess',
