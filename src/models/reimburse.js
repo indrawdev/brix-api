@@ -11,7 +11,8 @@ const Reimburse = sequelize.define('reimburse', {
     },
     batch_code: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
+        primaryKey: true
     },
     currency: {
         type: DataTypes.STRING,
@@ -52,6 +53,9 @@ const Reimburse = sequelize.define('reimburse', {
     },
     is_active: {
         type: DataTypes.STRING
+    },
+    created_at: {
+        type: DataTypes.DATE
     }
 }, {
     tableName: 't_claims',

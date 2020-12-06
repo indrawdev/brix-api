@@ -1,3 +1,4 @@
+const { Op } = require('sequelize')
 const Reimburse = require('../models/reimburse')
 const Client = require('../models/client')
 const Policy = require('../models/policy')
@@ -8,11 +9,11 @@ exports.listReimburses = (req, res, next) => {
 
     const policyId = req.params.policyId
 
-    let page    = parseInt(req.query.page)
-    let limit   = parseInt(req.query.limit)
-    let offset  = 0 + (page - 1) * limit
+    let offset = parseInt(req.query.offset)
+    let limit = parseInt(req.query.limit)
 
-    Reimburse.findAndCountAll({ 
+    Reimburse.findAndCountAll({
+        include: ReimburseMember,
         where: { policy_id: policyId, is_active: 1 }, 
         order: [
             ['claim_id', 'DESC']
@@ -54,12 +55,17 @@ exports.getReimburse = (req, res, next) => {
 exports.listDetails = (req, res, next) => {
     const batch = req.params.batch
 
-    let page    = parseInt(req.query.page)
+    let offset    = parseInt(req.query.offset)
     let limit   = parseInt(req.query.limit)
-    let offset  = 0 + (page - 1) * limit
+    let search  = req.query.search
 
     ReimburseMember.findAndCountAll({
-        where: { batch_code: batch },
+        where: {
+            batch_code: batch,
+            member_name: {
+                [Op.like]: `%${search}%`
+            }
+        },
         order: [
             ['created_at', 'DESC']
         ],
@@ -76,8 +82,39 @@ exports.listDetails = (req, res, next) => {
 }
 
 exports.listMembers = (req, res, next) => {
-    const code = req.params.batch
-    
+    const policyId = req.params.policyId
+
+    let offset = parseInt(req.query.offset)
+    let limit = parseInt(req.query.limit)
+    let search = req.query.search
+
+    ReimburseMember.findAndCountAll({
+        include: {
+            model: Reimburse,
+            attributes: ['batch_code'],
+            where: {
+                policy_id: policyId,
+                is_active: 1
+            }
+        },
+        where: {
+            member_name: {
+                [Op.like]: `%${search}%`
+            }
+        },
+        order: [
+            ['created_at', 'DESC']
+        ],
+        offset: offset, limit: limit
+    })
+    .then(results => { 
+        res.status(200).json({ success: true, data: results })
+        next()
+    })
+    .catch(err => { 
+        res.status(400).json({ success: false, data: err })
+        next()
+    })
 }
 
 exports.createReimburse = (req, res, next) => {

@@ -4,9 +4,8 @@ const Insurance = require('../models/insurance')
 
 exports.listPolicies = (req, res, next) => { 
 
-    let page    = parseInt(req.query.page)
-    let limit   = parseInt(req.query.limit)
-    let offset  = 0 + (page - 1) * limit
+    let offset = parseInt(req.query.offset)
+    let limit  = parseInt(req.query.limit)
 
     Policy.findAndCountAll({ 
         include: [Client, Insurance],

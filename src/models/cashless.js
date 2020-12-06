@@ -11,7 +11,8 @@ const Cashless = sequelize.define('cashless', {
     },
     batch_code: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
+        primaryKey: true
     },
     currency: {
         type: DataTypes.STRING,
@@ -46,6 +47,9 @@ const Cashless = sequelize.define('cashless', {
     },
     is_active: {
         type: DataTypes.STRING
+    },
+    created_at: {
+        type: DataTypes.DATE
     }
 },{
     tableName: 't_excess',

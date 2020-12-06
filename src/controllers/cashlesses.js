@@ -1,3 +1,4 @@
+const { Op } = require('sequelize')
 const Cashless = require('../models/cashless')
 const Client = require('../models/client')
 const Policy = require('../models/policy')
@@ -6,11 +7,11 @@ const CashlessMember = require('../models/cashlessMember')
 exports.listCashlesses = (req, res, next) => {
     const policyId = req.params.policyId
 
-    let page    = parseInt(req.query.page)
-    let limit   = parseInt(req.query.limit)
-    let offset  = 0 + (page - 1) * limit
+    let offset = parseInt(req.query.offset)
+    let limit = parseInt(req.query.limit)
 
-    Cashless.findAndCountAll({ 
+    Cashless.findAndCountAll({
+        include: CashlessMember,
         where: { policy_id : policyId, is_active: 1 }, 
         order: [
             ['excess_id', 'DESC']
@@ -51,12 +52,17 @@ exports.getCashless = (req, res, next) => {
 exports.listDetails = (req, res, next) => {
     const batch = req.params.batch
 
-    let page    = parseInt(req.query.page)
+    let offset = parseInt(req.query.offset)
     let limit   = parseInt(req.query.limit)
-    let offset  = 0 + (page - 1) * limit
+    let search  = req.query.search
 
     CashlessMember.findAndCountAll({
-        where: { batch_code: batch },
+        where: {
+            batch_code: batch,
+            member_name: {
+                [Op.like]: `%${search}%`
+            }
+        },
         order: [
             ['created_at', 'DESC']
         ],
@@ -67,6 +73,42 @@ exports.listDetails = (req, res, next) => {
         next()
     })
     .catch(err => {
+        res.status(400).json({ success: false, data: err })
+        next()
+    })
+}
+
+exports.listMembers = (req, res, next) => {
+    const policyId = req.params.policyId
+
+    let offset = parseInt(req.query.offset)
+    let limit = parseInt(req.query.limit)
+    let search = req.query.search
+
+    CashlessMember.findAndCountAll({
+        include: {
+            model: Cashless,
+            attributes: ['batch_code'],
+            where: {
+                policy_id: policyId,
+                is_active: 1
+            }
+        },
+        where: {
+            member_name: {
+                [Op.like]: `%${search}%`
+            }
+        },
+        order: [
+            ['created_at', 'DESC']
+        ],
+        offset: offset, limit: limit
+    })
+    .then(results => { 
+        res.status(200).json({ success: true, data: results })
+        next()
+    })
+    .catch(err => { 
         res.status(400).json({ success: false, data: err })
         next()
     })

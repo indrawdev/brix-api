@@ -27,7 +27,7 @@ const Member = sequelize.define('member', {
         allowNull: false
     },
     member_dob: {
-        type: DataTypes.DATE
+        type: DataTypes.DATEONLY,
     },
     member_gender: {
         type: DataTypes.STRING,
