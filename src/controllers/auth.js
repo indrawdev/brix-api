@@ -122,3 +122,13 @@ exports.signOut = (req, res, next) => {
     }
     
 }
+
+exports.front = (req, res, next) => { 
+    res.status(200).json({
+        error: false,
+        data: {
+            author: 'IT Development',
+            message: 'Consuming API, please contact it@integra.co.id'
+        }
+    })
+}
