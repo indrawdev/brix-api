@@ -2,14 +2,14 @@ const { Op } = require('sequelize')
 const Member = require('../models/member')
 const Dependent = require('../models/dependent')
 
-exports.listMembers = (req, res, next) => {
+exports.listMembers = async (req, res, next) => {
     const policyId = parseInt(req.params.policyId)
 
     let offset = parseInt(req.query.offset)
     let limit = parseInt(req.query.limit)
     let search = req.query.search
 
-    Member.findAndCountAll({ 
+    await Member.findAndCountAll({ 
         where: {
             policy_id: policyId, is_active: '1',
             member_name: {

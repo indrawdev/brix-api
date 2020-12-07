@@ -5,14 +5,14 @@ const Policy = require('../models/policy')
 const ReimburseMember = require('../models/reimburseMember')
 
 // show all reimburses
-exports.listReimburses = (req, res, next) => {
+exports.listReimburses = async (req, res, next) => {
 
     const policyId = req.params.policyId
 
     let offset = parseInt(req.query.offset)
     let limit = parseInt(req.query.limit)
 
-    Reimburse.findAndCountAll({
+    await Reimburse.findAndCountAll({
         include: ReimburseMember,
         where: { policy_id: policyId, is_active: 1 }, 
         order: [
@@ -31,11 +31,11 @@ exports.listReimburses = (req, res, next) => {
 }
 
 // show single reimburse
-exports.getReimburse = (req, res, next) => {
+exports.getReimburse = async (req, res, next) => {
     
     const reimburseId = req.params.id
 
-    Reimburse.findByPk(reimburseId, { 
+    await Reimburse.findByPk(reimburseId, { 
         include: [Client, Policy]
     })
     .then(result => {
@@ -52,14 +52,14 @@ exports.getReimburse = (req, res, next) => {
     })
 }
 
-exports.listDetails = (req, res, next) => {
+exports.listDetails = async (req, res, next) => {
     const batch = req.params.batch
 
     let offset    = parseInt(req.query.offset)
     let limit   = parseInt(req.query.limit)
     let search  = req.query.search
 
-    ReimburseMember.findAndCountAll({
+    await ReimburseMember.findAndCountAll({
         where: {
             batch_code: batch,
             member_name: {
@@ -81,14 +81,14 @@ exports.listDetails = (req, res, next) => {
     })
 }
 
-exports.listMembers = (req, res, next) => {
+exports.listMembers = async (req, res, next) => {
     const policyId = req.params.policyId
 
     let offset = parseInt(req.query.offset)
     let limit = parseInt(req.query.limit)
     let search = req.query.search
 
-    ReimburseMember.findAndCountAll({
+    await ReimburseMember.findAndCountAll({
         include: {
             model: Reimburse,
             attributes: ['batch_code'],
@@ -117,14 +117,19 @@ exports.listMembers = (req, res, next) => {
     })
 }
 
-exports.createReimburse = (req, res, next) => {
+exports.createReimburse = async (req, res, next) => {
+    
+    await ReimburseMember.create([
+
+    ])
+
+    await Reimburse.create()
+}
+
+exports.editReimburse = async (req, res, next) => {
 
 }
 
-exports.editReimburse = (req, res, next) => {
-
-}
-
-exports.deleteReimburse = (req, res, next) => {
+exports.deleteReimburse = async (req, res, next) => {
 
 }
