@@ -7,12 +7,12 @@ const md5 = require('md5')
 const { use } = require('../routes/auth')
 
 // show all users
-exports.listUsers = (req, res, next) => {
+exports.listUsers = async (req, res, next) => {
 
     let offset  = parseInt(req.query.offset)
     let limit   = parseInt(req.query.limit)
 
-    User.findAndCountAll({
+    await User.findAndCountAll({
         include: Client,
         where: { is_active: 1 }, 
         order: [
@@ -31,10 +31,10 @@ exports.listUsers = (req, res, next) => {
 }
 
 // show single user
-exports.getUser = (req, res, next) => {
+exports.getUser = async (req, res, next) => {
     const userId = req.params.id 
 
-    User.findByPk(userId, { 
+    await User.findByPk(userId, { 
         include: [{
             model: Client,
             include: [{
@@ -58,7 +58,7 @@ exports.getUser = (req, res, next) => {
     });
 }
 
-exports.updatePassword =  async (req, res, next) => { 
+exports.updatePassword = async (req, res, next) => { 
     const userId = parseInt(req.params.id)
     const oldPass = req.body.oldpass
     const newPass = req.body.newpass
@@ -66,7 +66,6 @@ exports.updatePassword =  async (req, res, next) => {
     let currentUser
     try {
         currentUser = await User.findByPk(userId)
-
         if (currentUser) {
             let hashedOldPass = md5(oldPass + currentUser.userclient_email)
             let hashedNewPass = md5(newPass + currentUser.userclient_email)

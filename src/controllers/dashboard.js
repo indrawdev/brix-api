@@ -2,6 +2,8 @@ const sequelize = require('../config/database')
 
 const Reimburse = require('../models/reimburse')
 const Cashless = require('../models/cashless')
+const Member = require('../models/member')
+const Dependent = require('../models/dependent')
 
 const totalClaim = async (req, res, next) => { 
    const clientId = parseInt(req.query.client)
@@ -56,10 +58,42 @@ const totalClaim = async (req, res, next) => {
    }
 }
 
-const totalClaimByAmount = async (req, res, next) => { 
+const totalMember = async (req, res, next) => { 
    const clientId = parseInt(req.query.client)
    const policyId = parseInt(req.query.policy)
+
+   try {
+      const employees = await Member.count({
+         where: {
+            client_id: clientId,
+            policy_id: policyId,
+            is_active: '1'
+         }
+      })
+
+      const dependents = await Dependent.count({
+         where: {
+            client_id: clientId,
+            policy_id: policyId,
+            is_active: '1'
+         }
+      })
+
+      res.status(200).json({
+         success: true,
+         data: {
+            employees: employees,
+            dependents: dependents,
+            members: employees + dependents
+         }
+      })
+      next()
+   } catch (err) {
+      res.status(500).json({ message: err })
+      next()
+   }
 
 }
 
 exports.totalClaim = totalClaim
+exports.totalMember = totalMember

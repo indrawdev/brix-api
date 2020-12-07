@@ -4,13 +4,13 @@ const Client = require('../models/client')
 const Policy = require('../models/policy')
 const CashlessMember = require('../models/cashlessMember')
 
-exports.listCashlesses = (req, res, next) => {
+exports.listCashlesses = async (req, res, next) => {
     const policyId = req.params.policyId
 
     let offset = parseInt(req.query.offset)
     let limit = parseInt(req.query.limit)
 
-    Cashless.findAndCountAll({
+    await Cashless.findAndCountAll({
         include: CashlessMember,
         where: { policy_id : policyId, is_active: 1 }, 
         order: [
@@ -28,10 +28,10 @@ exports.listCashlesses = (req, res, next) => {
     })
 }
 
-exports.getCashless = (req, res, next) => {
+exports.getCashless = async (req, res, next) => {
     const cashlessId = req.params.id
 
-    Cashless.findByPk(cashlessId, { 
+    await Cashless.findByPk(cashlessId, { 
         include: [Client, Policy]
     })
     .then(result => {
@@ -49,14 +49,14 @@ exports.getCashless = (req, res, next) => {
     })
 }
 
-exports.listDetails = (req, res, next) => {
+exports.listDetails = async (req, res, next) => {
     const batch = req.params.batch
 
     let offset = parseInt(req.query.offset)
     let limit   = parseInt(req.query.limit)
     let search  = req.query.search
 
-    CashlessMember.findAndCountAll({
+    await CashlessMember.findAndCountAll({
         where: {
             batch_code: batch,
             member_name: {
@@ -78,14 +78,14 @@ exports.listDetails = (req, res, next) => {
     })
 }
 
-exports.listMembers = (req, res, next) => {
+exports.listMembers = async (req, res, next) => {
     const policyId = req.params.policyId
 
     let offset = parseInt(req.query.offset)
     let limit = parseInt(req.query.limit)
     let search = req.query.search
 
-    CashlessMember.findAndCountAll({
+    await CashlessMember.findAndCountAll({
         include: {
             model: Cashless,
             attributes: ['batch_code'],

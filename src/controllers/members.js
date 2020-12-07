@@ -30,32 +30,34 @@ exports.listMembers = async (req, res, next) => {
     })
 }
 
-exports.getMember = (req, res, next) => { 
+exports.getMember = async (req, res, next) => { 
     const policyId = req.params.policyId
     const memberId = req.params.memberId
     
-    Member.findOne({ where: { policy_id: policyId, member_id: memberId }})
-        .then(result => {
-            if (result) {
-                res.status(200).json({ success: true, data: result })
-                next()
-            } else {
-                res.status(404).json({ success: false, message: 'Not found' })
-                next()
-            }
-        })
-        .catch(err => {
-            res.status(400).json({ success: false, message: err })
-        })
+    await Member.findOne({
+        where: { policy_id: policyId, member_id: memberId }
+    })
+    .then(result => {
+        if (result) {
+            res.status(200).json({ success: true, data: result })
+            next()
+        } else {
+            res.status(404).json({ success: false, message: 'Not found' })
+            next()
+        }
+    })
+    .catch(err => {
+        res.status(400).json({ success: false, message: err })
+    })
 }
 
-exports.listDependents = (req, res, next) => {
+exports.listDependents = async (req, res, next) => {
     const policyId = parseInt(req.params.policyId)
 
     const nik = req.params.nik
     let search = req.query.search
 
-    Dependent.findAll({
+    await Dependent.findAll({
         where: {
             policy_id: policyId, member_nik: nik,
             member_name: {
@@ -73,11 +75,11 @@ exports.listDependents = (req, res, next) => {
     })
 }
 
-exports.getDependent = (req, res, next) => {
+exports.getDependent = async (req, res, next) => {
     const policyId = parseInt(req.params.policyId)
     const memberId = parseInt(req.params.memberId)
 
-    Dependent.findOne({
+    await Dependent.findOne({
         where: { policy_id: policyId, member_id: memberId }
     })
     .then(result => {
@@ -95,10 +97,10 @@ exports.getDependent = (req, res, next) => {
     })
 }
 
-exports.listMembersAndDependents = (req, res, next) => { 
+exports.listMembersAndDependents = async (req, res, next) => { 
     const policyId = parseInt(req.params.policyId)
 
-    Member.findAndCountAll({
+    await Member.findAndCountAll({
         include: {
             model: Dependent,
             attributes: ['member_name', 'member_dob', 'member_gender', 'member_relation', 'member_effective'],

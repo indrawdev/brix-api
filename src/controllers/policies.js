@@ -2,12 +2,12 @@ const Policy = require('../models/policy')
 const Client = require('../models/client')
 const Insurance = require('../models/insurance')
 
-exports.listPolicies = (req, res, next) => { 
+exports.listPolicies = async (req, res, next) => { 
 
     let offset = parseInt(req.query.offset)
     let limit  = parseInt(req.query.limit)
 
-    Policy.findAndCountAll({ 
+    await Policy.findAndCountAll({ 
         include: [Client, Insurance],
         order: [
             ['policy_id', 'DESC']
@@ -24,11 +24,11 @@ exports.listPolicies = (req, res, next) => {
     })
 }
 
-exports.getPolicy = (req, res, next) => { 
+exports.getPolicy = async (req, res, next) => { 
 
     const policyId = req.params.id
     
-    Policy.findByPk(policyId, { 
+    await Policy.findByPk(policyId, { 
         include: [Client, Insurance] 
     })
     .then(result => {

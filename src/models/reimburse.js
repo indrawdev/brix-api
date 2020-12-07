@@ -58,7 +58,7 @@ const Reimburse = sequelize.define('reimburse', {
         type: DataTypes.DATE
     }
 }, {
-    tableName: 't_claims',
+    tableName: 't_claims_test',
     timestamps: false
 })
 

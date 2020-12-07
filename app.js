@@ -46,6 +46,7 @@ Dependent.belongsTo(Member, { foreignKey: 'member_nik', targetKey: 'member_nik' 
 
 const app = express();
 
+const frontRoutes = require('./src/routes/front');
 const authRoutes = require('./src/routes/auth');
 const userRoutes = require('./src/routes/users');
 const clientRoutes = require('./src/routes/clients');
@@ -66,6 +67,7 @@ app.use(bodyParser.json())
 app.use(upload.array()); 
 
 // routes
+app.use('/', frontRoutes)
 app.use('/v1', authRoutes)
 app.use('/v1', userRoutes)
 app.use('/v1', clientRoutes)

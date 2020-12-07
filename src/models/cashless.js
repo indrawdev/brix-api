@@ -52,7 +52,7 @@ const Cashless = sequelize.define('cashless', {
         type: DataTypes.DATE
     }
 },{
-    tableName: 't_excess',
+    tableName: 't_excess_test',
     timestamps: false
 })
 

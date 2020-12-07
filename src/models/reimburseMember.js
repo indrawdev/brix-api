@@ -37,7 +37,7 @@ const ReimburseMember = sequelize.define('reimburse_member', {
         type: DataTypes.DATE
     }
 },{
-    tableName: 't_claims_detail',
+    tableName: 't_claims_detail_test',
     timestamps: false
 })
 
