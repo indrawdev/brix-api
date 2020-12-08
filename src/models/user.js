@@ -25,6 +25,10 @@ const User = sequelize.define('users', {
         type: DataTypes.STRING,
         allowNull: false
     },
+    user_level: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
     last_login: {
         type: DataTypes.DATE
     },

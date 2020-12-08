@@ -3,6 +3,7 @@ const Reimburse = require('../models/reimburse')
 const Client = require('../models/client')
 const Policy = require('../models/policy')
 const ReimburseMember = require('../models/reimburseMember')
+const { getCount, setCount } = require('../utils/helper')
 
 // show all reimburses
 exports.listReimburses = async (req, res, next) => {
@@ -55,9 +56,9 @@ exports.getReimburse = async (req, res, next) => {
 exports.listDetails = async (req, res, next) => {
     const batch = req.params.batch
 
-    let offset    = parseInt(req.query.offset)
-    let limit   = parseInt(req.query.limit)
-    let search  = req.query.search
+    let offset = parseInt(req.query.offset)
+    let limit = parseInt(req.query.limit)
+    let search = req.query.search || ''
 
     await ReimburseMember.findAndCountAll({
         where: {
@@ -118,12 +119,13 @@ exports.listMembers = async (req, res, next) => {
 }
 
 exports.createReimburse = async (req, res, next) => {
-    
-    await ReimburseMember.create([
+    // const members[] = req.body
 
-    ])
+    // await ReimburseMember.bulkCreate(members)
 
-    await Reimburse.create()
+    // await Reimburse.create({
+
+    // })
 }
 
 exports.editReimburse = async (req, res, next) => {

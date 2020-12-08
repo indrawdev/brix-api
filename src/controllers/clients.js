@@ -1,14 +1,21 @@
+const { Op } = require('sequelize')
 const Client = require('../models/client')
 const User = require('../models/user')
 const Policy = require('../models/policy')
 
-exports.listClients = (req, res, next) => {
+exports.listClients = async (req, res, next) => {
     
-    let offset  = parseInt(req.query.offset)
-    let limit   = parseInt(req.query.limit)
+    let offset = parseInt(req.query.offset)
+    let limit = parseInt(req.query.limit)
+    let search = req.query.search
 
-    Client.findAndCountAll({
-        where: { is_active: 1 },
+    await Client.findAndCountAll({
+        where: {
+            is_active: 1,
+            client_name: {
+                [Op.like]: `%${search}%`
+            }
+        },
         order: [
             ['client_id', 'DESC']
         ], 
@@ -24,21 +31,23 @@ exports.listClients = (req, res, next) => {
     })
 }
 
-exports.getClient = (req, res, next) => { 
+exports.getClient = async (req, res, next) => { 
     const clientId = req.params.id
     
-    Client.findByPk(clientId, { include: [User, Policy]})
-        .then(client => {
-            if (client) {
-                res.status(200).json({ success: true, data: client })
-                next()
-            } else {
-                res.status(404).json({ success: false, message: 'Not found' })
-                next()
-            }
-        })
-        .catch(err => {
-            res.status(400).json({ success: false, message: err })
+    await Client.findByPk(clientId, {
+        include: [User, Policy]
+    })
+    .then(client => {
+        if (client) {
+            res.status(200).json({ success: true, data: client })
             next()
-        })
+        } else {
+            res.status(404).json({ success: false, message: 'Not found' })
+            next()
+        }
+    })
+    .catch(err => {
+        res.status(400).json({ success: false, message: err })
+        next()
+    })
 }
