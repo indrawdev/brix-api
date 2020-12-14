@@ -5,7 +5,7 @@ const router = express.Router()
 const authController = require('../controllers/auth')
 
 router.post('/signin', authController.signIn)
-router.post('/refresh', authController.refreshToken)
+router.get('/refresh', authController.refreshToken)
 router.get('/me', authController.me)
 router.get('/signout', authController.signOut)
 

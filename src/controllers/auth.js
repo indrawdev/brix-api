@@ -74,34 +74,42 @@ exports.signIn = async (req, res, next) => {
 }
 
 exports.refreshToken = async (req, res, next) => {
-    const accessToken = req.headers.authorization.split(" ")[1]
-    let payload
+    const refreshToken = req.headers.authorization.split(" ")[1]
 
-    if (!accessToken){
+    let payload
+    let data
+    let newToken
+    let verify
+
+    if (!refreshToken){
         return res.status(403).json()
     }
 
-    try {
-        payload = await jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET)
-    } catch(e){
-        return res.status(401).json({ error: e })
-    }
-
-    let refreshToken = ''
-
     try{
-        await jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET)
+        payload = await jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET)
+
+        data = {
+            clientId: payload.clientId,
+            userId: payload.userId,
+            email: payload.email
+        }
+
+        newToken = await jwt.sign(data, process.env.ACCESS_TOKEN_SECRET, { 
+            expiresIn: process.env.ACCESS_TOKEN_LIFE
+        })
+
+        verify = await jwt.verify(newToken, process.env.ACCESS_TOKEN_SECRET)
+
+        res.status(200).json({
+            accessToken: newToken,
+            issued: verify.iat,
+            expire: verify.exp
+        })
+        next()
     }
     catch(e){
-        return res.status(401).send()
+        return res.status(401).json({ error: e })
     }
-
-    let newToken = await jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, { 
-        expiresIn: process.env.ACCESS_TOKEN_LIFE
-    })
-
-    res.status(200).json("accessToken", newToken)
-    res.send()
 }
 
 exports.me = async (req, res, next) => {
