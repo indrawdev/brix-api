@@ -11,7 +11,7 @@ const cors = require('cors');
 
 const sequelize = require('./src/config/database')
 
-const User = require('./src/models/user')
+const UserClient = require('./src/models/userclient')
 const Client = require('./src/models/client')
 const Policy = require('./src/models/policy')
 const Insurance = require('./src/models/insurance')
@@ -22,9 +22,12 @@ const CashlessMember = require('./src/models/cashlessMember')
 const Member = require('./src/models/member')
 const Dependent = require('./src/models/dependent')
 
-// Associations
-Client.hasMany(User, { foreignKey: 'client_id' })
-User.belongsTo(Client, { foreignKey: 'client_id' })
+const User = require('./src/models/user')
+const Employee = require('./src/models/employee')
+
+// Associations for Client Portal
+Client.hasMany(UserClient, { foreignKey: 'client_id' })
+UserClient.belongsTo(Client, { foreignKey: 'client_id' })
 Client.hasMany(Policy, { foreignKey: 'client_id' })
 Policy.belongsTo(Client, { foreignKey: 'client_id' })
 Insurance.hasMany(Policy, { foreignKey: 'insurance_id' })
@@ -44,11 +47,15 @@ CashlessMember.belongsTo(Cashless, { foreignKey: 'batch_code', targetKey: 'batch
 Member.hasMany(Dependent, { foreignKey: 'member_nik', sourceKey: 'member_nik' })
 Dependent.belongsTo(Member, { foreignKey: 'member_nik', targetKey: 'member_nik' })
 
+// Associations for HR Portal
+Employee.hasOne(User, { foreignKey: 'employee_id', sourceKey: 'employee_id' })
+User.belongsTo(Employee, { foreignKey: 'employee_id', targetKey: 'employee_id' })
+
 const app = express();
 
 const frontRoutes = require('./src/routes/front');
 const authRoutes = require('./src/routes/auth');
-const userRoutes = require('./src/routes/users');
+const userclientRoutes = require('./src/routes/userclients');
 const clientRoutes = require('./src/routes/clients');
 const policyRoutes = require('./src/routes/policies');
 const insuranceRoutes = require('./src/routes/insurances');
@@ -56,6 +63,7 @@ const reimburseRoutes = require('./src/routes/reimburses');
 const cashlessRoutes = require('./src/routes/cashlesses');
 const memberRoutes = require('./src/routes/members');
 const dashboardRoutes = require('./src/routes/dashboard');
+const Employee = require('./src/models/employee');
 
 const port = process.env.APP_PORT || 3000;
 
@@ -66,10 +74,10 @@ app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
 app.use(upload.array()); 
 
-// routes
+// routes client portal
 app.use('/', frontRoutes)
 app.use('/v1', authRoutes)
-app.use('/v1', userRoutes)
+app.use('/v1', userclientRoutes)
 app.use('/v1', clientRoutes)
 app.use('/v1', policyRoutes)
 app.use('/v1', insuranceRoutes)
@@ -77,6 +85,9 @@ app.use('/v1', reimburseRoutes)
 app.use('/v1', cashlessRoutes)
 app.use('/v1', memberRoutes)
 app.use('/v1', dashboardRoutes)
+
+// routes employee portal
+
 
 sequelize
     .sync({ force: false })

@@ -115,11 +115,17 @@ exports.listMembers = async (req, res, next) => {
 }
 
 exports.createCashless = (req, res, next) => {
-    try {
-        
-    } catch (e) {
-        
-    }
+    const members = req.body
+
+    await CashlessMember.bulkCreate(members)
+    .then(results => {
+        res.status(200).json({ success: true, data: results })
+        next()
+    })
+    .catch(err => { 
+        res.status(400).json({ success: false, data: err })
+        next()
+    })
 }
 
 exports.editCashless = (req, res, next) => {
@@ -131,10 +137,5 @@ exports.editCashless = (req, res, next) => {
 }
 
 exports.deleteCashless = (req, res, next) => {
-    try {
-        
-    } catch (e) {
-        
-    }
+    
 }
-

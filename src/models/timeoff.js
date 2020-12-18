@@ -24,6 +24,22 @@ const Timeoff = sequelize.define('timeoffs', {
    note: {
       type: DataTypes.TEXT,
       allowNull: true
+   },
+   created_by: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+   },
+   created_at: {
+      type: DataTypes.DATE,
+      allowNull: false
+   },
+   updated_by: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+   },
+   updated_at: {
+      type: DataTypes.DATE,
+      allowNull: true
    }
 },{
    tableName: 't_times_off',

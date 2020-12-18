@@ -1,6 +1,6 @@
 const { Op } = require('sequelize')
 const Client = require('../models/client')
-const User = require('../models/user')
+const UserClient = require('../models/userclient')
 const Policy = require('../models/policy')
 const Insurance = require('../models/insurance')
 
@@ -37,7 +37,7 @@ exports.getClient = async (req, res, next) => {
     
     await Client.findByPk(clientId, {
         include: [{
-            model: User
+            model: UserClient
         }, {
             model: Policy,
             include: Insurance

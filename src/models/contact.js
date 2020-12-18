@@ -12,6 +12,14 @@ const Contact = sequelize.define('contacts', {
    employee_id: {
       type: DataTypes.INTEGER,
       allowNull: false
+   },
+   contact_name: {
+      type: DataTypes.STRING,
+      allowNull: false
+   },
+   contact_phone: {
+      type: DataTypes.STRING,
+      allowNull: false
    }
 },{
    tableName: 'm_contacts',

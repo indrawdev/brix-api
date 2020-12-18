@@ -4,6 +4,74 @@ dotenv.config()
 const md5 = require('md5')
 const jwt = require('jsonwebtoken')
 const User = require('../models/user')
+const UserClient = require('../models/userclient')
+
+exports.logIn = async (req, res, next) => {
+    const email = req.body.email
+    const password = req.body.password
+    const hashedPass = md5(password + email)
+
+    try {
+        await User.findOne({
+            where: {
+                email: email,
+                password: hashedPass
+            }
+        })
+        .then((result) => {
+            if (result) {
+
+                let payload = {
+                    employeeId: result.employee_id,
+                    userId: result.user_id, 
+                    email: result.email 
+                }
+
+                let accessToken = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, { 
+                    expiresIn: process.env.ACCESS_TOKEN_LIFE 
+                })
+
+                let refreshToken = jwt.sign(payload, process.env.REFRESH_TOKEN_SECRET, {
+                    expiresIn: process.env.REFRESH_TOKEN_LIFE
+                })
+
+                let verify
+
+                try {
+                    verify = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET)
+                    UserClient.update({
+                        last_login: new Date(Date.now()).toISOString()
+                    },{
+                        where: {
+                            user_id: result.user_id
+                        }
+                    })
+                } catch (err) {
+                    console.error(err);
+                }
+            
+                res.status(200).json({
+                    success: true,
+                    accessToken: accessToken,
+                    refreshToken: refreshToken,
+                    issued: verify.iat,
+                    expire: verify.exp,
+                    data: result
+                })
+                next()
+            } else {
+                res.status(404).json({ success: false, message: 'Not found' })
+                next()
+            }
+        })
+        .catch(err => {
+            res.status(400).json({ success: false, message: err })
+            next()
+        })
+    } catch (e) {
+        res.status(500).json({ success: false, message: e})
+    }
+}
 
 exports.signIn = async (req, res, next) => {
 
@@ -12,7 +80,7 @@ exports.signIn = async (req, res, next) => {
     const hashedPass = md5(password + email)
 
     try {
-        await User.findOne({
+        await UserClient.findOne({
             where: {
                 userclient_email: email,
                 userclient_password: hashedPass
@@ -39,7 +107,7 @@ exports.signIn = async (req, res, next) => {
 
                 try {
                     verify = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET)
-                    User.update({
+                    UserClient.update({
                         last_login: new Date(Date.now()).toISOString()
                     },{
                         where: {
