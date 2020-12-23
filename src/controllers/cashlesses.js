@@ -114,28 +114,46 @@ exports.listMembers = async (req, res, next) => {
     })
 }
 
-exports.createCashless = (req, res, next) => {
-    const members = req.body
+exports.createCashless = async (req, res, next) => {
+	const data = JSON.parse(JSON.stringify(req.body))
 
-    await CashlessMember.bulkCreate(members)
-    .then(results => {
-        res.status(200).json({ success: true, data: results })
-        next()
-    })
-    .catch(err => { 
-        res.status(400).json({ success: false, data: err })
-        next()
-    })
+	// members.forEach(element => console.log(element))
+	await Cashless.create({
+		'client_id': data.client_id,
+		'policy_id': '',
+		'batch_code': '',
+		'currency': '',
+		'total_case': '',
+		'total_excess': '',
+		'total_unpaid': '',
+		'total_paid': '',
+		'created_by': '',
+		'created_at': ''
+	}).then(results => { 
+
+	}).catch(err => { 
+
+	})
+
+	console.log(data.details.length)
+	next()
+
+	// await CashlessMember.bulkCreate(data.details, {returning: true})
+	// .then(results => {
+	// 	res.status(200).json({ success: true, data: results })
+	// 	next()
+	// })
+	// .catch(err => { 
+	// 	res.status(400).json({ success: false, data: err })
+	// 	next()
+	// })
 }
 
-exports.editCashless = (req, res, next) => {
-    try {
-        
-    } catch (e) {
-        
-    }
+exports.editCashless = async (req, res, next) => {
+	const { batch } = req.body
+	await CashlessMember.find({})
 }
 
-exports.deleteCashless = (req, res, next) => {
+exports.deleteCashless = async (req, res, next) => {
     
 }

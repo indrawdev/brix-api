@@ -63,7 +63,6 @@ const reimburseRoutes = require('./src/routes/reimburses');
 const cashlessRoutes = require('./src/routes/cashlesses');
 const memberRoutes = require('./src/routes/members');
 const dashboardRoutes = require('./src/routes/dashboard');
-const Employee = require('./src/models/employee');
 
 const port = process.env.APP_PORT || 3000;
 

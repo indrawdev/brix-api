@@ -119,17 +119,17 @@ exports.listMembers = async (req, res, next) => {
 }
 
 exports.createReimburse = async (req, res, next) => {
-    const members = req.body
+	const data = req.body
 
-    await ReimburseMember.bulkCreate(members)
-    .then(results => {
-        res.status(200).json({ success: true, data: results })
-        next()
-    })
-    .catch(err => { 
-        res.status(400).json({ success: false, data: err })
-        next()
-    })
+	await ReimburseMember.bulkCreate(data)
+	.then(results => {
+		res.status(200).json({ success: true, data: results })
+		next()
+	})
+	.catch(err => { 
+		res.status(400).json({ success: false, data: err })
+		next()
+	})
 }
 
 exports.editReimburse = async (req, res, next) => {
