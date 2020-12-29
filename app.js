@@ -1,16 +1,16 @@
 const dotenv = require('dotenv')
 dotenv.config()
 
-const hostname = process.env.APP_HOST;
+const hostname = process.env.APP_HOST
 
-const express = require("express");
-const bodyParser = require('body-parser');
-const multer = require('multer');
-const upload = multer();
-const cors = require('cors');
-
+const express = require("express")
+const bodyParser = require('body-parser')
+const multer = require('multer')
+const upload = multer()
+const cors = require('cors')
 const sequelize = require('./src/config/database')
 
+// Models for client
 const UserClient = require('./src/models/userclient')
 const Client = require('./src/models/client')
 const Policy = require('./src/models/policy')
@@ -24,6 +24,15 @@ const Dependent = require('./src/models/dependent')
 
 const User = require('./src/models/user')
 const Employee = require('./src/models/employee')
+
+// Models for HR
+const Attendance = require('./src/models/attendance')
+const Timeoff = require('./src/models/timeoff')
+const Family = require('./src/models/family')
+const File = require('./src/models/file')
+const Formal = require('./src/models/formal')
+const Informal = require('./src/models/informal')
+const Experience = require('./src/models/experience')
 
 // Associations for Client Portal
 Client.hasMany(UserClient, { foreignKey: 'client_id' })
@@ -47,31 +56,52 @@ CashlessMember.belongsTo(Cashless, { foreignKey: 'batch_code', targetKey: 'batch
 Member.hasMany(Dependent, { foreignKey: 'member_nik', sourceKey: 'member_nik' })
 Dependent.belongsTo(Member, { foreignKey: 'member_nik', targetKey: 'member_nik' })
 
-// Associations for HR Portal
+// Associations general
 Employee.hasOne(User, { foreignKey: 'employee_id', sourceKey: 'employee_id' })
 User.belongsTo(Employee, { foreignKey: 'employee_id', targetKey: 'employee_id' })
 
-const app = express();
+// Associations for HR Portal
+Employee.hasMany(Attendance, { foreignKey: 'employee_id' })
+Attendance.belongsTo(Employee, { foreignKey: 'employee_id' })
+Employee.hasMany(Timeoff, { foreignKey: 'employee_id' })
+Timeoff.belongsTo(Employee, { foreignKey: 'employee_id' })
+Employee.hasMany(Family, { foreignKey: 'employee_id' })
+Family.belongsTo(Employee, { foreignKey: 'employee_id' })
+Employee.hasMany(File, { foreignKey: 'employee_id' })
+File.belongsTo(Employee, { foreignKey: 'employee_id' })
+Employee.hasMany(Formal, { foreignKey: 'employee_id' })
+Formal.belongsTo(Employee, { foreignKey: 'employee_id' })
+Employee.hasMany(Informal, { foreignKey: 'employee_id' })
+Informal.belongsTo(Employee, { foreignKey: 'employee_id' })
+Employee.hasMany(Experience, { foreignKey: 'employee_id' })
+Experience.belongsTo(Employee, { foreignKey: 'employee_id' })
 
-const frontRoutes = require('./src/routes/front');
-const authRoutes = require('./src/routes/auth');
-const userclientRoutes = require('./src/routes/userclients');
-const clientRoutes = require('./src/routes/clients');
-const policyRoutes = require('./src/routes/policies');
-const insuranceRoutes = require('./src/routes/insurances');
-const reimburseRoutes = require('./src/routes/reimburses');
-const cashlessRoutes = require('./src/routes/cashlesses');
-const memberRoutes = require('./src/routes/members');
-const dashboardRoutes = require('./src/routes/dashboard');
+// init routes for client
+const frontRoutes = require('./src/routes/front')
+const authRoutes = require('./src/routes/auth')
+const userclientRoutes = require('./src/routes/userclients')
+const clientRoutes = require('./src/routes/clients')
+const policyRoutes = require('./src/routes/policies')
+const insuranceRoutes = require('./src/routes/insurances')
+const reimburseRoutes = require('./src/routes/reimburses')
+const cashlessRoutes = require('./src/routes/cashlesses')
+const memberRoutes = require('./src/routes/members')
+const dashboardRoutes = require('./src/routes/dashboard')
 
-const port = process.env.APP_PORT || 3000;
+// init routes for HR
+const employeeRoutes = require('./src/routes/employees')
+const attendanceRoutes = require('./src/routes/attendances')
+const timeoffRoutes = require('./src/routes/timeoffs')
 
-app.use(cors());
+const port = process.env.APP_PORT || 3000
 
+const app = express()
+
+app.use(cors())
 app.use(bodyParser.text({ extended: true }))
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
-app.use(upload.array()); 
+app.use(upload.array())
 
 // routes client portal
 app.use('/', frontRoutes)
@@ -86,16 +116,18 @@ app.use('/v1', memberRoutes)
 app.use('/v1', dashboardRoutes)
 
 // routes employee portal
-
+app.use('/v2', employeeRoutes)
+app.use('/v2', attendanceRoutes)
+app.use('/v2', timeoffRoutes)
 
 sequelize
-    .sync({ force: false })
-    .then(result => {
-        // running
-        app.listen(port, () => {
-            console.log(`Server is running on port ${hostname} | ${port}.`);
-        });
-    })
-    .catch(err => {
-        console.log(err);
-    });
+	.sync({ force: false })
+	.then(result => {
+		// running
+		app.listen(port, () => {
+			console.log(`Server is running on port ${hostname} | ${port}.`)
+		})
+	})
+	.catch(err => {
+		console.log(err)
+	})

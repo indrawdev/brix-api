@@ -2,8 +2,8 @@ const { DataTypes } = require('sequelize')
 
 const sequelize = require('../config/database')
 
-const Experience = sequelize.define('experiences', {
-	experience_id: {
+const Attendance = sequelize.define('attendance', {
+	attendance_id: {
 		type: DataTypes.INTEGER,
 		autoIncrement: true,
 		allowNull: false,
@@ -13,21 +13,28 @@ const Experience = sequelize.define('experiences', {
 		type: DataTypes.INTEGER,
 		allowNull: false
 	},
-	company_name: {
+	type_request: {
 		type: DataTypes.STRING,
 		allowNull: false
 	},
-	job_position: {
+	attendance_status: {
 		type: DataTypes.STRING,
 		allowNull: false
 	},
-	from_date: {
-		type: DataTypes.DATEONLY,
+	approval_by: {
+		type: DataTypes.INTEGER,
 		allowNull: false
 	},
-	to_date: {
-		type: DataTypes.DATEONLY,
-		allowNull: false
+	approval_at: {
+		type: DataTypes.DATEONLY
+	},
+	long: {
+		type: DataTypes.STRING,
+		allowNull: true
+	},
+	latt: {
+		type: DataTypes.STRING,
+		allowNull: true
 	},
 	created_by: {
 		type: DataTypes.INTEGER,
@@ -45,9 +52,9 @@ const Experience = sequelize.define('experiences', {
 		type: DataTypes.DATE,
 		allowNull: true
 	}
-},{
-	tableName: 'm_experiences',
+}, {
+	tableName: 't_times_attendance',
 	timestamps: false
 })
 
-module.exports = Experience
+module.exports = Attendance
