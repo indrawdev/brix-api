@@ -24,11 +24,13 @@ const Dependent = require('./src/models/dependent')
 
 const User = require('./src/models/user')
 const Employee = require('./src/models/employee')
+const Reference = require('./src/models/reference')
 
 // Models for HR
 const Attendance = require('./src/models/attendance')
 const Timeoff = require('./src/models/timeoff')
 const Family = require('./src/models/family')
+const Contact = require('./src/models/contact')
 const File = require('./src/models/file')
 const Formal = require('./src/models/formal')
 const Informal = require('./src/models/informal')
@@ -59,6 +61,8 @@ Dependent.belongsTo(Member, { foreignKey: 'member_nik', targetKey: 'member_nik' 
 // Associations general
 Employee.hasOne(User, { foreignKey: 'employee_id', sourceKey: 'employee_id' })
 User.belongsTo(Employee, { foreignKey: 'employee_id', targetKey: 'employee_id' })
+Employee.hasOne(Reference, { foreignKey: 'reference_value', sourceKey: 'employee_dept' })
+Reference.belongsTo(Employee, { foreignKey: 'reference_value', targetKey: 'employee_dept' })
 
 // Associations for HR Portal
 Employee.hasMany(Attendance, { foreignKey: 'employee_id' })
@@ -67,6 +71,8 @@ Employee.hasMany(Timeoff, { foreignKey: 'employee_id' })
 Timeoff.belongsTo(Employee, { foreignKey: 'employee_id' })
 Employee.hasMany(Family, { foreignKey: 'employee_id' })
 Family.belongsTo(Employee, { foreignKey: 'employee_id' })
+Employee.hasMany(Contact, { foreignKey: 'employee_id' })
+Contact.belongsTo(Employee, { foreignKey: 'employee_id' })
 Employee.hasMany(File, { foreignKey: 'employee_id' })
 File.belongsTo(Employee, { foreignKey: 'employee_id' })
 Employee.hasMany(Formal, { foreignKey: 'employee_id' })
