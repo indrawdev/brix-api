@@ -44,15 +44,44 @@ exports.getAttendance = async (req, res, next) => {
 }
 
 exports.createAttendance = async (req, res, next) => { 
-	const data = JSON.parse(JSON.stringify(req.body))
+	const employeeId = req.params.id
+	const { type, status, user } = JSON.parse(JSON.stringify(req.body))
+	
 	await Attendance.create({
-
+		'employee_id': employeeId,
+		'type_request': type,
+		'attendance_status': status,
+		'created_by': user,
+		'created_at': new Date()
 	})
-	.then(result => { 
-		res.status(200).json({ success: true, data: result })
-		next()
-	}).catch(err => { 
-		res.status(400).json({ success: false, message: err })
-		next()
+}
+
+exports.updateAttendance = async (req, res, next) => { 
+	const employeeId = req.params.id
+	const attendanceId = req.params.aid
+	const { type, status, user } = JSON.parse(JSON.stringify(req.body))
+
+	await Attendance.update({
+		'type': type,
+		'status': status,
+		'updated_by': user,
+		'updated_at': new Date()
+	}, {
+		where: {
+			'employee_id': employeeId,
+			'attendance_id': attendanceId
+		}
+	})
+}
+
+exports.deleteAttendance = async (req, res, next) => { 
+	const employeeId = req.params.id
+	const attendanceId = req.params.aid
+
+	await Attendance.delete({
+		where: {
+			'employee_id': employeeId,
+			'attendance_id': attendanceId
+		}
 	})
 }

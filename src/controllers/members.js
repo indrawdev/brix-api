@@ -11,7 +11,8 @@ exports.listMembers = async (req, res, next) => {
 
 	await Member.findAndCountAll({ 
 		where: {
-			policy_id: policyId, is_active: '1',
+			policy_id: policyId,
+			is_active: '1',
 			member_name: {
 				[Op.like]: `%${search}%`
 			}

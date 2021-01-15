@@ -8,7 +8,7 @@ const Informal = require('../models/informal')
 const Experience = require('../models/experience')
 const Reference = require('../models/reference')
 
-exports.listEmployees = async (req, res, next) => { 
+exports.listEmployees = async (req, res, next) => {
 	let offset = parseInt(req.query.offset)
 	let limit = parseInt(req.query.limit)
 	let search = req.query.search
@@ -22,21 +22,20 @@ exports.listEmployees = async (req, res, next) => {
 		},
 		order: [
 			['employee_name', 'ASC']
-		], 
-		offset: offset, limit: limit 
+		],
+		offset: offset, limit: limit
 	})
-	.then(results => {
-		res.status(200).json({ success: true, data: results })
-		next()
-	})
-	.catch(err => {
-		res.status(400).json({ success: false, message: err })
-		next()
-	})
+		.then(results => {
+			res.status(200).json({ success: true, data: results })
+			next()
+		})
+		.catch(err => {
+			res.status(400).json({ success: false, message: err })
+			next()
+		})
 }
 
-
-exports.getEmployee = async (req, res, next) => { 
+exports.getEmployee = async (req, res, next) => {
 	const employeeId = req.params.id
 
 	await Employee.findByPk(employeeId, {
@@ -47,76 +46,438 @@ exports.getEmployee = async (req, res, next) => {
 			}
 		}]
 	})
-	.then(employee => {
-		if (employee) {
-			res.status(200).json({ success: true, data: employee })
+		.then(employee => {
+			if (employee) {
+				res.status(200).json({ success: true, data: employee })
+				next()
+			} else {
+				res.status(404).json({ success: false, message: 'Not found' })
+				next()
+			}
+		})
+		.catch(err => {
+			res.status(400).json({ success: false, message: err })
 			next()
-		} else {
-			res.status(404).json({ success: false, message: 'Not found' })
-			next()
-		}
-	})
-	.catch(err => {
-		res.status(400).json({ success: false, message: err })
-		next()
-	})
+		})
 }
 
-exports.listFamilies = async (req, res, next) => { 
+exports.listFamilies = async (req, res, next) => {
+	const employeeId = req.params.id
+
 	let offset = parseInt(req.query.offset)
 	let limit = parseInt(req.query.limit)
 
 	await Family.findAndCountAll({
 		where: {
-			is_active: 1
+			employee_id: employeeId
 		},
 		order: [
 			['family_id', 'DESC']
-		], 
-		offset: offset, limit: limit 
+		],
+		offset: offset, limit: limit
 	})
-	.then(results => {
-		res.status(200).json({ success: true, data: results })
-		next()
+		.then(results => {
+			res.status(200).json({ success: true, data: results })
+			next()
+		})
+		.catch(err => {
+			res.status(500).json({ success: false, message: err })
+			next()
+		})
+}
+
+exports.createFamily = async (req, res, next) => {
+	const {
+		employee,
+		name, dob,
+		relation,
+		marital,
+		gender,
+		religion,
+		created_by,
+		created_at
+	} = JSON.stringify(req.body)
+
+	await Family.create({
+		employee_id: employee,
+		family_name: name,
+		family_dob: dob,
+		family_relation: relation,
+		family_marital: marital,
+		family_gender: gender,
+		family_religion: religion,
+		created_by: created_by,
+		created_at: created_at
 	})
-	.catch(err => {
-		res.status(400).json({ success: false, message: err })
-		next()
+		.then(results => {
+			res.status(200).json({ success: true, data: results })
+			next()
+		})
+		.catch(err => {
+			res.status(500).json({ success: false, message: err })
+			next()
+		})
+}
+
+exports.updateFamily = async (req, res, next) => {
+	const employeeId = req.params.id
+	const familyId = req.params.fid
+
+	const {
+		name,
+		dob,
+		relation,
+		marital,
+		gender,
+		religion,
+	} = JSON.stringify(req.body)
+
+	await Family.update({
+		'name': name,
+		'dob': dob,
+		'relation': relation,
+		'marital': marital,
+		'gender': gender,
+		'religion': religion
+	}, {
+		where: {
+			employee_id: employeeId,
+			family_id: familyId
+		}
 	})
 }
 
-exports.createFamily = async (req, res, next) => { 
+exports.deleteFamily = async (req, res, next) => {
+	const employeeId = req.params.id
+	const familyId = req.params.fid
+
+	await Family.delete({
+		where: {
+			employee_id: employeeId,
+			family_id: familyId
+		}
+	})
+		.then(results => {
+			res.status(200).json({ success: true, data: results })
+			next()
+		})
+		.catch(err => {
+			res.status(500).json({ success: false, message: err })
+			next()
+		})
+}
+
+exports.listFiles = async (req, res, next) => {
+	const employeeId = req.params.id
+
+	let offset = parseInt(req.query.offset)
+	let limit = parseInt(req.query.limit)
+
+	await File.findAndCountAll({
+		where: {
+			employee_id: employeeId
+		},
+		order: [
+			['file_id', 'DESC']
+		],
+		offset: offset, limit: limit
+	})
+		.then(results => {
+			res.status(200).json({ success: true, data: results })
+			next()
+		})
+		.catch(err => {
+			res.status(500).json({ success: false, message: err })
+			next()
+		})
+}
+
+exports.createFile = async (req, res, next) => {
+	const employeeId = req.params.id
+
+	await File.create({
+		'employee_id': employeeId
+	})
+}
+
+exports.deleteFile = async (req, res, next) => {
+	const employeeId = req.params.id
+	const fileId = req.params.fid
+}
+
+exports.listFormals = async (req, res, next) => {
+	const employeeId = req.params.id
+
+	let offset = parseInt(req.query.offset)
+	let limit = parseInt(req.query.limit)
+
+	await Formal.findAndCountAll({
+		where: {
+			employee_id: employeeId
+		},
+		order: [
+			['formal_id', 'DESC']
+		],
+		offset: offset, limit: limit
+	})
+		.then(results => {
+			res.status(200).json({ success: true, data: results })
+			next()
+		})
+		.catch(err => {
+			res.status(500).json({ success: false, message: err })
+			next()
+		})
+}
+
+exports.createFormal = async (req, res, next) => {
+	const {
+		employee,
+		grade,
+		institution,
+		majors,
+		score,
+		start_year,
+		end_year,
+		created_by,
+		created_at
+	} = JSON.stringify(req.body)
+
+	await Formal.create({
+		'employee_id': employee,
+		'grade': grade,
+		'institution': institution,
+		'majors': majors,
+		'score': score,
+		'start_year': start_year,
+		'end_year': end_year,
+		'created_by': created_by,
+		'created_at': created_at
+	})
+		.then(results => {
+			res.status(200).json({ success: true, data: results })
+			next()
+		})
+		.catch(err => {
+			res.status(500).json({ success: false, message: err })
+			next()
+		})
+}
+
+exports.updateFormal = async (req, res, next) => {
+	const employeeId = req.params.id
+	const formalId = req.params.fid
+
+	const {
+		grade,
+		institution,
+		majors,
+		score,
+		start_year,
+		end_year
+	} = JSON.stringify(req.body)
+
+	await Formal.update({
+		'grade': grade,
+		'institution': institution,
+		'majors': majors,
+		'score': score,
+		'start_year': start_year,
+		'end_year': end_year,
+		'updated_by': '',
+		'updated_at': ''
+	}, {
+		where: {
+			'employee_id': employeeId,
+			'formal_id': formalId
+		}
+	})
 
 }
 
-exports.listFiles = async (req, res, next) => { 
+exports.deleteFormal = async (req, res, next) => {
 
 }
 
-exports.createFile = async (req, res, next) => { 
+exports.listInformals = async (req, res, next) => {
+	const employeeId = req.params.id
+
+	let offset = parseInt(req.query.offset)
+	let limit = parseInt(req.query.limit)
+
+	await Informal.findAndCountAll({
+		where: {
+			employee_id: employeeId
+		},
+		order: [
+			['informal_id', 'DESC']
+		],
+		offset: offset, limit: limit
+	})
+		.then(results => {
+			res.status(200).json({ success: true, data: results })
+			next()
+		})
+		.catch(err => {
+			res.status(500).json({ success: false, message: err })
+			next()
+		})
+}
+
+exports.createInformal = async (req, res, next) => {
+	const employeeId = req.params.id
+
+	const {
+		education,
+		held_by,
+		start_date,
+		end_date,
+		duration_type,
+		fee,
+		description,
+		attach_file
+	} = JSON.stringify(req.body)
+
+	await Informal.create({
+		'employee_id': employeeId,
+		'education': education,
+		'held_by': held_by,
+		'start_date': start_date,
+		'end_date': end_date,
+		'duration_type': duration_type,
+		'fee': fee,
+		'description': description,
+		'attach_file': attach_file
+	})
 
 }
 
-exports.listFormals = async (req, res, next) => { 
+exports.updateInformal = async (req, res, next) => {
+	const employeeId = req.params.id
+	const informalId = req.params.fid
+
+	const {
+		education,
+		held_by,
+		start_date,
+		end_date,
+		duration_type,
+		fee,
+		description,
+		attach_file
+	} = JSON.stringify(req.body)
+
+	await Informal.update({
+		'education': education,
+		'held_by': held_by,
+		'start_date': start_date,
+		'end_date': end_date,
+		'duration_type': duration_type,
+		'fee': fee,
+		'description': description,
+		'attach_file': attach_file
+	}, {
+		where: {
+			'employee_id': employeeId,
+			'informal_id': informalId
+		}
+	})
+}
+
+exports.deleteInformal = async (req, res, next) => {
+	const employeeId = req.params.id
+	const informalId = req.params.fid
+
+	await Informal.delete({
+		where: {
+			'employee_id': employeeId,
+			'informal_id': informalId
+		}
+	})
+}
+
+exports.listExperiences = async (req, res, next) => {
+	const employeeId = req.params.id
+
+	let offset = parseInt(req.query.offset)
+	let limit = parseInt(req.query.limit)
+
+	await Experience.findAndCountAll({
+		where: {
+			employee_id: employeeId
+		},
+		order: [
+			['experience_id', 'DESC']
+		],
+		offset: offset, limit: limit
+	})
+		.then(results => {
+			res.status(200).json({ success: true, data: results })
+			next()
+		})
+		.catch(err => {
+			res.status(500).json({ success: false, message: err })
+			next()
+		})
+}
+
+exports.createExperience = async (req, res, next) => {
+	const {
+		employee,
+		company,
+		position,
+		from,
+		to
+	} = JSON.stringify(req.body)
+
+	await Experience.create({
+		'employee_id': employee,
+		'company_name': company,
+		'job_position': position,
+		'from_date': from,
+		'to_date': to,
+		'created_by': '',
+		'created_at': ''
+	})
 
 }
 
-exports.createFormal = async (req, res, next) => { 
+exports.updateExperience = async (req, res, next) => {
+	const employeeId = req.params.id
+	const experienceId = req.params.fid
 
+	const {
+		employee,
+		company,
+		position,
+		from,
+		to
+	} = JSON.stringify(req.body)
+
+	await Experience.update({
+		'empployee': employee,
+		'company': company,
+		'position': position,
+		'from': from,
+		'to': to,
+		'updated_by': '',
+		'updated_at': ''
+	}, {
+		where: {
+			'employee_id': employeeId,
+			'experience_id': experienceId
+		}
+	})
 }
 
-exports.listInformals = async (req, res, next) => { 
+exports.deleteExperience = async (req, res, next) => {
+	const employeeId = req.params.id
+	const experienceId = req.params.fid
 
-}
-
-exports.createInformal = async (req, res, next) => { 
-
-}
-
-exports.listExperiences = async (req, res, next) => { 
-
-}
-
-exports.createExperience = async (req, res, next) => { 
-
+	await Experience.delete({
+		where: {
+			'employee_id': employeeId,
+			'experience_id': experienceId
+		}
+	})
 }
