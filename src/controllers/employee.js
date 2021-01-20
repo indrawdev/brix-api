@@ -94,9 +94,8 @@ exports.createFamily = async (req, res, next) => {
 		marital,
 		gender,
 		religion,
-		created_by,
-		created_at
-	} = JSON.stringify(req.body)
+		user
+	} = JSON.parse(JSON.stringify(req.body))
 
 	await Family.create({
 		employee_id: employee,
@@ -106,8 +105,8 @@ exports.createFamily = async (req, res, next) => {
 		family_marital: marital,
 		family_gender: gender,
 		family_religion: religion,
-		created_by: created_by,
-		created_at: created_at
+		created_by: user,
+		created_at: new Date()
 	})
 		.then(results => {
 			res.status(200).json({ success: true, data: results })
@@ -130,7 +129,7 @@ exports.updateFamily = async (req, res, next) => {
 		marital,
 		gender,
 		religion,
-	} = JSON.stringify(req.body)
+	} = JSON.parse(JSON.stringify(req.body))
 
 	await Family.update({
 		'name': name,
@@ -195,14 +194,21 @@ exports.listFiles = async (req, res, next) => {
 exports.createFile = async (req, res, next) => {
 	const employeeId = req.params.id
 
+	const { fileName, user } = JSON.parse(JSON.stringify(req.body))
+
 	await File.create({
-		'employee_id': employeeId
+		'employee_id': employeeId,
+		'filename': fileName,
+		'created_by': user,
+		'created_at': new Date()
 	})
 }
 
 exports.deleteFile = async (req, res, next) => {
 	const employeeId = req.params.id
 	const fileId = req.params.fid
+
+	await File.delete({})
 }
 
 exports.listFormals = async (req, res, next) => {
@@ -239,9 +245,9 @@ exports.createFormal = async (req, res, next) => {
 		score,
 		start_year,
 		end_year,
-		created_by,
-		created_at
-	} = JSON.stringify(req.body)
+		user
+	} = JSON.parse(JSON.stringify(req.body))
+
 
 	await Formal.create({
 		'employee_id': employee,
@@ -251,8 +257,8 @@ exports.createFormal = async (req, res, next) => {
 		'score': score,
 		'start_year': start_year,
 		'end_year': end_year,
-		'created_by': created_by,
-		'created_at': created_at
+		'created_by': user,
+		'created_at': ''
 	})
 		.then(results => {
 			res.status(200).json({ success: true, data: results })
@@ -274,8 +280,9 @@ exports.updateFormal = async (req, res, next) => {
 		majors,
 		score,
 		start_year,
-		end_year
-	} = JSON.stringify(req.body)
+		end_year,
+		user
+	} = JSON.parse(JSON.stringify(req.body))
 
 	await Formal.update({
 		'grade': grade,
@@ -284,7 +291,7 @@ exports.updateFormal = async (req, res, next) => {
 		'score': score,
 		'start_year': start_year,
 		'end_year': end_year,
-		'updated_by': '',
+		'updated_by': user,
 		'updated_at': ''
 	}, {
 		where: {
@@ -335,8 +342,9 @@ exports.createInformal = async (req, res, next) => {
 		duration_type,
 		fee,
 		description,
-		attach_file
-	} = JSON.stringify(req.body)
+		attach_file,
+		user
+	} = JSON.parse(JSON.stringify(req.body))
 
 	await Informal.create({
 		'employee_id': employeeId,
@@ -347,7 +355,9 @@ exports.createInformal = async (req, res, next) => {
 		'duration_type': duration_type,
 		'fee': fee,
 		'description': description,
-		'attach_file': attach_file
+		'attach_file': attach_file,
+		'created_by': user,
+		'created_at': ''
 	})
 
 }
@@ -364,8 +374,9 @@ exports.updateInformal = async (req, res, next) => {
 		duration_type,
 		fee,
 		description,
-		attach_file
-	} = JSON.stringify(req.body)
+		attach_file,
+		user
+	} = JSON.parse(JSON.stringify(req.body))
 
 	await Informal.update({
 		'education': education,
@@ -375,7 +386,9 @@ exports.updateInformal = async (req, res, next) => {
 		'duration_type': duration_type,
 		'fee': fee,
 		'description': description,
-		'attach_file': attach_file
+		'attach_file': attach_file,
+		'updated_by': user,
+		'updated_at': new Date()
 	}, {
 		where: {
 			'employee_id': employeeId,
@@ -427,8 +440,9 @@ exports.createExperience = async (req, res, next) => {
 		company,
 		position,
 		from,
-		to
-	} = JSON.stringify(req.body)
+		to,
+		user
+	} = JSON.parse(JSON.stringify(req.body))
 
 	await Experience.create({
 		'employee_id': employee,
@@ -436,8 +450,8 @@ exports.createExperience = async (req, res, next) => {
 		'job_position': position,
 		'from_date': from,
 		'to_date': to,
-		'created_by': '',
-		'created_at': ''
+		'created_by': user,
+		'created_at': new Date()
 	})
 
 }
@@ -451,8 +465,9 @@ exports.updateExperience = async (req, res, next) => {
 		company,
 		position,
 		from,
-		to
-	} = JSON.stringify(req.body)
+		to,
+		user
+	} = JSON.parse(JSON.stringify(req.body))
 
 	await Experience.update({
 		'empployee': employee,
@@ -460,8 +475,8 @@ exports.updateExperience = async (req, res, next) => {
 		'position': position,
 		'from': from,
 		'to': to,
-		'updated_by': '',
-		'updated_at': ''
+		'updated_by': user,
+		'updated_at': new Date()
 	}, {
 		where: {
 			'employee_id': employeeId,

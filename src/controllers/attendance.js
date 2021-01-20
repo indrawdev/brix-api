@@ -54,11 +54,15 @@ exports.createAttendance = async (req, res, next) => {
 		'created_by': user,
 		'created_at': new Date()
 	})
+
+	res.status(201).json({})
+	next()
 }
 
 exports.updateAttendance = async (req, res, next) => { 
 	const employeeId = req.params.id
 	const attendanceId = req.params.aid
+	
 	const { type, status, user } = JSON.parse(JSON.stringify(req.body))
 
 	await Attendance.update({
@@ -72,6 +76,9 @@ exports.updateAttendance = async (req, res, next) => {
 			'attendance_id': attendanceId
 		}
 	})
+
+	res.status(200).json({})
+	next()
 }
 
 exports.deleteAttendance = async (req, res, next) => { 
@@ -84,4 +91,7 @@ exports.deleteAttendance = async (req, res, next) => {
 			'attendance_id': attendanceId
 		}
 	})
+
+	res.status(200).json({})
+	next()
 }
