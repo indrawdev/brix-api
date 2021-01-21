@@ -9,8 +9,8 @@ const Experience = require('../models/experience')
 const Reference = require('../models/reference')
 
 exports.listEmployees = async (req, res, next) => {
-	let offset = parseInt(req.query.offset)
-	let limit = parseInt(req.query.limit)
+	let offset = parseInt(req.query.offset) || 1
+	let limit = parseInt(req.query.limit) || 10
 	let search = req.query.search
 
 	await Employee.findAndCountAll({
@@ -64,8 +64,8 @@ exports.getEmployee = async (req, res, next) => {
 exports.listFamilies = async (req, res, next) => {
 	const employeeId = req.params.id
 
-	let offset = parseInt(req.query.offset)
-	let limit = parseInt(req.query.limit)
+	let offset = parseInt(req.query.offset) || 1
+	let limit = parseInt(req.query.limit) || 10
 
 	await Family.findAndCountAll({
 		where: {
@@ -169,8 +169,8 @@ exports.deleteFamily = async (req, res, next) => {
 exports.listFiles = async (req, res, next) => {
 	const employeeId = req.params.id
 
-	let offset = parseInt(req.query.offset)
-	let limit = parseInt(req.query.limit)
+	let offset = parseInt(req.query.offset) || 1
+	let limit = parseInt(req.query.limit) || 10
 
 	await File.findAndCountAll({
 		where: {
@@ -214,8 +214,8 @@ exports.deleteFile = async (req, res, next) => {
 exports.listFormals = async (req, res, next) => {
 	const employeeId = req.params.id
 
-	let offset = parseInt(req.query.offset)
-	let limit = parseInt(req.query.limit)
+	let offset = parseInt(req.query.offset) || 1
+	let limit = parseInt(req.query.limit) || 10
 
 	await Formal.findAndCountAll({
 		where: {
@@ -309,8 +309,8 @@ exports.deleteFormal = async (req, res, next) => {
 exports.listInformals = async (req, res, next) => {
 	const employeeId = req.params.id
 
-	let offset = parseInt(req.query.offset)
-	let limit = parseInt(req.query.limit)
+	let offset = parseInt(req.query.offset) || 1
+	let limit = parseInt(req.query.limit) || 10
 
 	await Informal.findAndCountAll({
 		where: {
@@ -412,8 +412,8 @@ exports.deleteInformal = async (req, res, next) => {
 exports.listExperiences = async (req, res, next) => {
 	const employeeId = req.params.id
 
-	let offset = parseInt(req.query.offset)
-	let limit = parseInt(req.query.limit)
+	let offset = parseInt(req.query.offset) || 1
+	let limit = parseInt(req.query.limit) || 10
 
 	await Experience.findAndCountAll({
 		where: {

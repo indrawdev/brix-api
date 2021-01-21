@@ -6,8 +6,8 @@ const Insurance = require('../models/insurance')
 
 exports.listClients = async (req, res, next) => {
     
-	let offset = parseInt(req.query.offset)
-	let limit = parseInt(req.query.limit)
+	let offset = parseInt(req.query.offset) || 1
+	let limit = parseInt(req.query.limit) || 10
 	let search = req.query.search
 
 	await Client.findAndCountAll({

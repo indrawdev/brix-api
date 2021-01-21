@@ -3,8 +3,8 @@ const Employee = require('../models/employee')
 
 // show all users
 exports.listUsers = async (req, res, next) => {
-	let offset  = parseInt(req.query.offset)
-	let limit = parseInt(req.query.limit)
+	let offset = parseInt(req.query.offset) || 1
+	let limit = parseInt(req.query.limit) || 10
 	
 	await User.findAndCountAll({
 		include: Employee,

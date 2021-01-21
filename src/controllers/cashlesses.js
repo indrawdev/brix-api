@@ -7,8 +7,8 @@ const CashlessMember = require('../models/cashlessMember')
 exports.listCashlesses = async (req, res, next) => {
 	const policyId = req.params.policyId
 
-	let offset = parseInt(req.query.offset)
-	let limit = parseInt(req.query.limit)
+	let offset = parseInt(req.query.offset) || 1
+	let limit = parseInt(req.query.limit) || 10
 
 	await Cashless.findAndCountAll({
 		include: CashlessMember,
@@ -52,8 +52,8 @@ exports.getCashless = async (req, res, next) => {
 exports.listDetails = async (req, res, next) => {
 	const batch = req.params.batch
 
-	let offset = parseInt(req.query.offset)
-	let limit   = parseInt(req.query.limit)
+	let offset = parseInt(req.query.offset) || 1
+	let limit = parseInt(req.query.limit) || 10
 	let search  = req.query.search
 
 	await CashlessMember.findAndCountAll({

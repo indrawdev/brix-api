@@ -5,8 +5,8 @@ const Dependent = require('../models/dependent')
 exports.listMembers = async (req, res, next) => {
 	const policyId = parseInt(req.params.policyId)
 
-	let offset = parseInt(req.query.offset)
-	let limit = parseInt(req.query.limit)
+	let offset = parseInt(req.query.offset) || 1
+	let limit = parseInt(req.query.limit) || 10
 	let search = req.query.search
 
 	await Member.findAndCountAll({ 

@@ -1,10 +1,10 @@
 const Attendance = require('../models/attendance')
 
 exports.listAttendances = async (req, res, next) => {
-	const employeeId = parseInt(req.params.employeeId)
+	const employeeId = parseInt(req.params.eid)
 
-	let offset = parseInt(req.query.offset)
-	let limit = parseInt(req.query.limit)
+	let offset = parseInt(req.query.offset) || 1
+	let limit = parseInt(req.query.limit) || 10
 
 	await Attendance.findAndCountAll({
 		where: { 
