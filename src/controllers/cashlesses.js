@@ -117,12 +117,6 @@ exports.listMembers = async (req, res, next) => {
 exports.createCashless = async (req, res, next) => {
 	const data = JSON.parse(JSON.stringify(req.body))
 
-	try {
-
-	} catch (err) {
-		
-	}
-	// members.forEach(element => console.log(element))
 	await Cashless.create({
 		'client_id': data.client_id,
 		'policy_id': data.policy_id,
@@ -132,33 +126,37 @@ exports.createCashless = async (req, res, next) => {
 		'total_excess': data.total_excess,
 		'total_unpaid': data.total_unpaid,
 		'total_paid': data.total_paid,
-		'created_by': data.created_by,
-		'created_at': data.created_at
-	}).then(results => { 
-
+		'created_by': data.user,
+		'created_at': new Date()
+	}).then(result => { 
+		res.status(201).json({ success: true, data: result })
+		next()
 	}).catch(err => { 
-
+		res.status(500).json({ success: false, data: err })
+		next()
 	})
 
-	console.log(data.details.length)
-	next()
-
-	// await CashlessMember.bulkCreate(data.details, {returning: true})
-	// .then(results => {
-	// 	res.status(200).json({ success: true, data: results })
-	// 	next()
-	// })
-	// .catch(err => { 
-	// 	res.status(400).json({ success: false, data: err })
-	// 	next()
-	// })
 }
 
-exports.editCashless = async (req, res, next) => {
-	const { batch } = req.body
-	await CashlessMember.find({})
+exports.updateCashless = async (req, res, next) => {
+	const data = JSON.parse(JSON.stringify(req.body))
+	await CashlessMember.update({
+		where: {
+	
+		}
+	}).then(result => { 
+		res.status(200).json({ success: true, data: result })
+		next()
+	}).catch(err => { 
+		res.status(500).json({ success: false, data: err })
+		next()
+	})
 }
 
 exports.deleteCashless = async (req, res, next) => {
-    
+	await CashlessMember.delete({}).then(result => { 
+		res.status()
+	}).catch(err => { 
+
+	})
 }

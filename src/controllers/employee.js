@@ -208,7 +208,12 @@ exports.deleteFile = async (req, res, next) => {
 	const employeeId = req.params.id
 	const fileId = req.params.fid
 
-	await File.delete({})
+	await File.delete({
+		where: {
+			'employee_id': employeeId,
+			'file_id': fileId
+		}
+	}).then(function (result) { })
 }
 
 exports.listFormals = async (req, res, next) => {
@@ -237,34 +242,24 @@ exports.listFormals = async (req, res, next) => {
 }
 
 exports.createFormal = async (req, res, next) => {
-	const {
-		employee,
-		grade,
-		institution,
-		majors,
-		score,
-		start_year,
-		end_year,
-		user
-	} = JSON.parse(JSON.stringify(req.body))
-
+	const data = JSON.parse(JSON.stringify(req.body))
 
 	await Formal.create({
-		'employee_id': employee,
-		'grade': grade,
-		'institution': institution,
-		'majors': majors,
-		'score': score,
-		'start_year': start_year,
-		'end_year': end_year,
-		'created_by': user,
-		'created_at': ''
+		'employee_id': data.employee,
+		'grade': data.grade,
+		'institution': data.institution,
+		'majors': data.majors,
+		'score': data.score,
+		'start_year': data.start_year,
+		'end_year': data.end_year,
+		'created_by': data.user,
+		'created_at': new Date()
 	})
-		.then(results => {
-			res.status(200).json({ success: true, data: results })
+		.then(function (result) {
+			res.status(200).json({ success: true, data: result })
 			next()
 		})
-		.catch(err => {
+		.catch(function (err) {
 			res.status(500).json({ success: false, message: err })
 			next()
 		})
@@ -274,36 +269,47 @@ exports.updateFormal = async (req, res, next) => {
 	const employeeId = req.params.id
 	const formalId = req.params.fid
 
-	const {
-		grade,
-		institution,
-		majors,
-		score,
-		start_year,
-		end_year,
-		user
-	} = JSON.parse(JSON.stringify(req.body))
+	const data = JSON.parse(JSON.stringify(req.body))
 
 	await Formal.update({
-		'grade': grade,
-		'institution': institution,
-		'majors': majors,
-		'score': score,
-		'start_year': start_year,
-		'end_year': end_year,
-		'updated_by': user,
-		'updated_at': ''
+		'grade': data.grade,
+		'institution': data.institution,
+		'majors': data.majors,
+		'score': data.score,
+		'start_year': data.start_year,
+		'end_year': data.end_year,
+		'updated_by': data.user,
+		'updated_at': new Date()
 	}, {
 		where: {
 			'employee_id': employeeId,
 			'formal_id': formalId
 		}
+	}).then(function (result) {
+		res.status(200).json({ success: true, data: result })
+		next()
+	}).catch(function (err) {
+		res.status(500).json({ success: false, message: err })
+		next()
 	})
-
 }
 
 exports.deleteFormal = async (req, res, next) => {
+	const employeeId = req.params.id
+	const formalId = req.params.fid
 
+	await Formal.delete({
+		where: {
+			'employee_id': employeeId,
+			'formal_id': formalId
+		}
+	}).then(result => {
+		res.status(200).json({ success: true, data: result })
+		next()
+	}).catch(err => {
+		res.status(500).json({ success: false, message: err })
+		next()
+	})
 }
 
 exports.listInformals = async (req, res, next) => {
@@ -334,66 +340,57 @@ exports.listInformals = async (req, res, next) => {
 exports.createInformal = async (req, res, next) => {
 	const employeeId = req.params.id
 
-	const {
-		education,
-		held_by,
-		start_date,
-		end_date,
-		duration_type,
-		fee,
-		description,
-		attach_file,
-		user
-	} = JSON.parse(JSON.stringify(req.body))
+	const data = JSON.parse(JSON.stringify(req.body))
 
 	await Informal.create({
 		'employee_id': employeeId,
-		'education': education,
-		'held_by': held_by,
-		'start_date': start_date,
-		'end_date': end_date,
-		'duration_type': duration_type,
-		'fee': fee,
-		'description': description,
-		'attach_file': attach_file,
-		'created_by': user,
-		'created_at': ''
+		'education': data.education,
+		'held_by': data.held_by,
+		'start_date': data.start_date,
+		'end_date': data.end_date,
+		'duration_type': data.duration_type,
+		'fee': data.fee,
+		'description': data.description,
+		'attach_file': data.attach_file,
+		'created_by': data.user,
+		'created_at': new Date()
+	}).then(function (result) {
+		res.status(201).json({ success: true, data: result })
+		next()
+	}).catch(function (err) {
+		res.status(500).json({ success: false, message: err })
+		next()
 	})
-
 }
 
 exports.updateInformal = async (req, res, next) => {
 	const employeeId = req.params.id
 	const informalId = req.params.fid
 
-	const {
-		education,
-		held_by,
-		start_date,
-		end_date,
-		duration_type,
-		fee,
-		description,
-		attach_file,
-		user
-	} = JSON.parse(JSON.stringify(req.body))
+	const data = JSON.parse(JSON.stringify(req.body))
 
 	await Informal.update({
-		'education': education,
-		'held_by': held_by,
-		'start_date': start_date,
-		'end_date': end_date,
-		'duration_type': duration_type,
-		'fee': fee,
-		'description': description,
-		'attach_file': attach_file,
-		'updated_by': user,
+		'education': data.education,
+		'held_by': data.held_by,
+		'start_date': data.start_date,
+		'end_date': data.end_date,
+		'duration_type': data.duration_type,
+		'fee': data.fee,
+		'description': data.description,
+		'attach_file': data.attach_file,
+		'updated_by': data.user,
 		'updated_at': new Date()
 	}, {
 		where: {
 			'employee_id': employeeId,
 			'informal_id': informalId
 		}
+	}).then(function (result) {
+		res.status(200).json({ success: true, data: result })
+		next()
+	}).catch(function (err) {
+		res.status(500).json({ success: false, message: err })
+		next()
 	})
 }
 
@@ -406,6 +403,12 @@ exports.deleteInformal = async (req, res, next) => {
 			'employee_id': employeeId,
 			'informal_id': informalId
 		}
+	}).then(function (result) {
+		res.status(200).json({ success: true, data: result })
+		next()
+	}).catch(function (err) {
+		res.status(500).json({ success: false, message: err })
+		next()
 	})
 }
 
@@ -435,54 +438,52 @@ exports.listExperiences = async (req, res, next) => {
 }
 
 exports.createExperience = async (req, res, next) => {
-	const {
-		employee,
-		company,
-		position,
-		from,
-		to,
-		user
-	} = JSON.parse(JSON.stringify(req.body))
+	const data = JSON.parse(JSON.stringify(req.body))
 
 	await Experience.create({
-		'employee_id': employee,
-		'company_name': company,
-		'job_position': position,
-		'from_date': from,
-		'to_date': to,
-		'created_by': user,
+		'employee_id': data.employee,
+		'company_name': data.company,
+		'job_position': data.position,
+		'from_date': data.from,
+		'to_date': data.to,
+		'created_by': data.user,
 		'created_at': new Date()
+	}).then(function (result) {
+		res.status(201).json({ success: true, data: result })
+		next()
+	}).catch(function (err) {
+		res.status(500).json({ success: false, message: err })
+		next()
 	})
-
 }
 
 exports.updateExperience = async (req, res, next) => {
 	const employeeId = req.params.id
 	const experienceId = req.params.fid
 
-	const {
-		employee,
-		company,
-		position,
-		from,
-		to,
-		user
-	} = JSON.parse(JSON.stringify(req.body))
+	const data = JSON.parse(JSON.stringify(req.body))
 
 	await Experience.update({
-		'empployee': employee,
-		'company': company,
-		'position': position,
-		'from': from,
-		'to': to,
-		'updated_by': user,
+		'empployee': data.employee,
+		'company': data.company,
+		'position': data.position,
+		'from': data.from,
+		'to': data.to,
+		'updated_by': data.user,
 		'updated_at': new Date()
 	}, {
 		where: {
 			'employee_id': employeeId,
 			'experience_id': experienceId
 		}
+	}).then(function (result) {
+		res.status(200).json({ success: true, data: result })
+		next()
+	}).catch(function (err) {
+		res.status(500).json({ success: false, message: err })
+		next()
 	})
+
 }
 
 exports.deleteExperience = async (req, res, next) => {
@@ -494,5 +495,11 @@ exports.deleteExperience = async (req, res, next) => {
 			'employee_id': employeeId,
 			'experience_id': experienceId
 		}
+	}).then(function (result) {
+		res.status(200).json({ success: true, data: result })
+		next()
+	}).catch(function (err) {
+		res.status(500).json({ success: false, message: err })
+		next()
 	})
 }

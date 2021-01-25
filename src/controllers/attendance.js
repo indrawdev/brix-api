@@ -45,13 +45,13 @@ exports.getAttendance = async (req, res, next) => {
 
 exports.createAttendance = async (req, res, next) => { 
 	const employeeId = req.params.id
-	const { type, status, user } = JSON.parse(JSON.stringify(req.body))
+	const data = JSON.parse(JSON.stringify(req.body))
 	
 	await Attendance.create({
 		'employee_id': employeeId,
-		'type_request': type,
-		'attendance_status': status,
-		'created_by': user,
+		'type_request': data.type,
+		'attendance_status': data.status,
+		'created_by': data.user,
 		'created_at': new Date()
 	})
 
@@ -63,12 +63,12 @@ exports.updateAttendance = async (req, res, next) => {
 	const employeeId = req.params.id
 	const attendanceId = req.params.aid
 	
-	const { type, status, user } = JSON.parse(JSON.stringify(req.body))
+	const data = JSON.parse(JSON.stringify(req.body))
 
 	await Attendance.update({
-		'type': type,
-		'status': status,
-		'updated_by': user,
+		'type': data.type,
+		'status': data.status,
+		'updated_by': data.user,
 		'updated_at': new Date()
 	}, {
 		where: {
