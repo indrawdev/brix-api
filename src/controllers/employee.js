@@ -87,25 +87,17 @@ exports.listFamilies = async (req, res, next) => {
 }
 
 exports.createFamily = async (req, res, next) => {
-	const {
-		employee,
-		name, dob,
-		relation,
-		marital,
-		gender,
-		religion,
-		user
-	} = JSON.parse(JSON.stringify(req.body))
+	const data = JSON.parse(JSON.stringify(req.body))
 
 	await Family.create({
-		employee_id: employee,
-		family_name: name,
-		family_dob: dob,
-		family_relation: relation,
-		family_marital: marital,
-		family_gender: gender,
-		family_religion: religion,
-		created_by: user,
+		employee_id: data.employee,
+		family_name: data.name,
+		family_dob: data.dob,
+		family_relation: data.relation,
+		family_marital: data.marital,
+		family_gender: data.gender,
+		family_religion: data.religion,
+		created_by: data.user,
 		created_at: new Date()
 	})
 		.then(results => {
@@ -213,7 +205,7 @@ exports.deleteFile = async (req, res, next) => {
 			'employee_id': employeeId,
 			'file_id': fileId
 		}
-	}).then(function (result) { })
+	}).then(result => { })
 }
 
 exports.listFormals = async (req, res, next) => {
@@ -255,11 +247,11 @@ exports.createFormal = async (req, res, next) => {
 		'created_by': data.user,
 		'created_at': new Date()
 	})
-		.then(function (result) {
+		.then(result => {
 			res.status(200).json({ success: true, data: result })
 			next()
 		})
-		.catch(function (err) {
+		.catch(err => {
 			res.status(500).json({ success: false, message: err })
 			next()
 		})
@@ -285,10 +277,10 @@ exports.updateFormal = async (req, res, next) => {
 			'employee_id': employeeId,
 			'formal_id': formalId
 		}
-	}).then(function (result) {
+	}).then(result => {
 		res.status(200).json({ success: true, data: result })
 		next()
-	}).catch(function (err) {
+	}).catch(err => {
 		res.status(500).json({ success: false, message: err })
 		next()
 	})
@@ -354,10 +346,10 @@ exports.createInformal = async (req, res, next) => {
 		'attach_file': data.attach_file,
 		'created_by': data.user,
 		'created_at': new Date()
-	}).then(function (result) {
+	}).then(result => {
 		res.status(201).json({ success: true, data: result })
 		next()
-	}).catch(function (err) {
+	}).catch(err => {
 		res.status(500).json({ success: false, message: err })
 		next()
 	})
@@ -385,10 +377,10 @@ exports.updateInformal = async (req, res, next) => {
 			'employee_id': employeeId,
 			'informal_id': informalId
 		}
-	}).then(function (result) {
+	}).then(result => {
 		res.status(200).json({ success: true, data: result })
 		next()
-	}).catch(function (err) {
+	}).catch(err => {
 		res.status(500).json({ success: false, message: err })
 		next()
 	})
@@ -403,10 +395,10 @@ exports.deleteInformal = async (req, res, next) => {
 			'employee_id': employeeId,
 			'informal_id': informalId
 		}
-	}).then(function (result) {
+	}).then(result => {
 		res.status(200).json({ success: true, data: result })
 		next()
-	}).catch(function (err) {
+	}).catch(err => {
 		res.status(500).json({ success: false, message: err })
 		next()
 	})
@@ -448,10 +440,10 @@ exports.createExperience = async (req, res, next) => {
 		'to_date': data.to,
 		'created_by': data.user,
 		'created_at': new Date()
-	}).then(function (result) {
+	}).then(result => {
 		res.status(201).json({ success: true, data: result })
 		next()
-	}).catch(function (err) {
+	}).catch(err => {
 		res.status(500).json({ success: false, message: err })
 		next()
 	})
@@ -476,10 +468,10 @@ exports.updateExperience = async (req, res, next) => {
 			'employee_id': employeeId,
 			'experience_id': experienceId
 		}
-	}).then(function (result) {
+	}).then(result => {
 		res.status(200).json({ success: true, data: result })
 		next()
-	}).catch(function (err) {
+	}).catch(err => {
 		res.status(500).json({ success: false, message: err })
 		next()
 	})
@@ -495,10 +487,10 @@ exports.deleteExperience = async (req, res, next) => {
 			'employee_id': employeeId,
 			'experience_id': experienceId
 		}
-	}).then(function (result) {
+	}).then(result => {
 		res.status(200).json({ success: true, data: result })
 		next()
-	}).catch(function (err) {
+	}).catch(err => {
 		res.status(500).json({ success: false, message: err })
 		next()
 	})

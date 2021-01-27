@@ -12,7 +12,7 @@ router.get('/cashless/details/:batch', verify, cashlessesController.listDetails)
 router.get('/policy/:policyId/cashlesses/members', verify, cashlessesController.listMembers)
 
 router.post('/cashlesses', cashlessesController.createCashless)
-router.put('/cashless/:id', cashlessesController.editCashless)
+router.put('/cashless/:id', cashlessesController.updateCashless)
 router.delete('/cashless/:id', cashlessesController.deleteCashless)
 
 module.exports = router

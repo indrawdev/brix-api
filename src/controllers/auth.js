@@ -3,8 +3,12 @@ dotenv.config()
 
 const md5 = require('md5')
 const jwt = require('jsonwebtoken')
+const nodemailer = require('nodemailer')
+
 const User = require('../models/user')
 const UserClient = require('../models/userclient')
+const { transporter } = require('../middlewares/transporter')
+
 
 exports.logIn = async (req, res, next) => {
 	const email = req.body.email
@@ -18,58 +22,58 @@ exports.logIn = async (req, res, next) => {
 				password: hashedPass
 			}
 		})
-		.then((result) => {
-			if (result) {
-				let payload = {
-					employeeId: result.employee_id,
-					userId: result.user_id, 
-					email: result.email 
-				}
+			.then((result) => {
+				if (result) {
+					let payload = {
+						employeeId: result.employee_id,
+						userId: result.user_id,
+						email: result.email
+					}
 
-				let accessToken = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, { 
-					expiresIn: process.env.ACCESS_TOKEN_LIFE 
-				})
-
-				let refreshToken = jwt.sign(payload, process.env.REFRESH_TOKEN_SECRET, {
-					expiresIn: process.env.REFRESH_TOKEN_LIFE
-				})
-
-				let verify
-
-				try {
-					verify = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET)
-
-					UserClient.update({
-						last_login: new Date(Date.now()).toISOString()
-					},{
-						where: {
-							user_id: result.user_id
-						}
+					let accessToken = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, {
+						expiresIn: process.env.ACCESS_TOKEN_LIFE
 					})
-				} catch (err) {
-					console.error(err);
-				}
-				
-				res.status(200).json({
+
+					let refreshToken = jwt.sign(payload, process.env.REFRESH_TOKEN_SECRET, {
+						expiresIn: process.env.REFRESH_TOKEN_LIFE
+					})
+
+					let verify
+
+					try {
+						verify = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET)
+
+						UserClient.update({
+							last_login: new Date(Date.now()).toISOString()
+						}, {
+							where: {
+								user_id: result.user_id
+							}
+						})
+					} catch (err) {
+						console.error(err);
+					}
+
+					res.status(200).json({
 						success: true,
 						accessToken: accessToken,
 						refreshToken: refreshToken,
 						issued: verify.iat,
 						expire: verify.exp,
 						data: result
-				})
+					})
+					next()
+				} else {
+					res.status(404).json({ success: false, message: 'Not found' })
+					next()
+				}
+			})
+			.catch(err => {
+				res.status(400).json({ success: false, message: err })
 				next()
-			} else {
-				res.status(404).json({ success: false, message: 'Not found' })
-				next()
-			}
-		})
-		.catch(err => {
-			res.status(400).json({ success: false, message: err })
-			next()
-		})
+			})
 	} catch (e) {
-		res.status(500).json({ success: false, message: e})
+		res.status(500).json({ success: false, message: e })
 	}
 }
 
@@ -86,58 +90,58 @@ exports.signIn = async (req, res, next) => {
 				userclient_password: hashedPass
 			}
 		})
-		.then((result) => {
-			if (result) {
+			.then((result) => {
+				if (result) {
 
-				let payload = {
-					clientId: result.client_id,
-					userId: result.userclient_id, 
-					email: result.userclient_email 
-				}
+					let payload = {
+						clientId: result.client_id,
+						userId: result.userclient_id,
+						email: result.userclient_email
+					}
 
-				let accessToken = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, { 
-					expiresIn: process.env.ACCESS_TOKEN_LIFE 
-				})
-
-				let refreshToken = jwt.sign(payload, process.env.REFRESH_TOKEN_SECRET, {
-					expiresIn: process.env.REFRESH_TOKEN_LIFE
-				})
-
-				let verify
-
-				try {
-					verify = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET)
-					UserClient.update({
-						last_login: new Date(Date.now()).toISOString()
-					},{
-						where: {
-							userclient_id: result.userclient_id
-						}
+					let accessToken = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, {
+						expiresIn: process.env.ACCESS_TOKEN_LIFE
 					})
-				} catch (err) {
-					console.error(err);
+
+					let refreshToken = jwt.sign(payload, process.env.REFRESH_TOKEN_SECRET, {
+						expiresIn: process.env.REFRESH_TOKEN_LIFE
+					})
+
+					let verify
+
+					try {
+						verify = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET)
+						UserClient.update({
+							last_login: new Date(Date.now()).toISOString()
+						}, {
+							where: {
+								userclient_id: result.userclient_id
+							}
+						})
+					} catch (err) {
+						console.error(err);
+					}
+
+					res.status(200).json({
+						success: true,
+						accessToken: accessToken,
+						refreshToken: refreshToken,
+						issued: verify.iat,
+						expire: verify.exp,
+						data: result
+					})
+					next()
+				} else {
+					res.status(404).json({ success: false, message: 'Not found' })
+					next()
 				}
-		
-				res.status(200).json({
-					success: true,
-					accessToken: accessToken,
-					refreshToken: refreshToken,
-					issued: verify.iat,
-					expire: verify.exp,
-					data: result
-				})
+			})
+			.catch(err => {
+				res.status(400).json({ success: false, message: err })
 				next()
-			} else {
-				res.status(404).json({ success: false, message: 'Not found' })
-				next()
-			}
-		})
-		.catch(err => {
-			res.status(400).json({ success: false, message: err })
-			next()
-		})
+			})
 	} catch (e) {
-		res.status(500).json({ success: false, message: e})
+		res.status(500).json({ success: false, message: e })
 	}
 }
 
@@ -149,11 +153,11 @@ exports.refreshToken = async (req, res, next) => {
 	let newToken
 	let verify
 
-	if (!refreshToken){
+	if (!refreshToken) {
 		return res.status(403).json()
 	}
 
-	try{
+	try {
 		payload = await jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET)
 
 		data = {
@@ -162,7 +166,7 @@ exports.refreshToken = async (req, res, next) => {
 			email: payload.email
 		}
 
-		newToken = await jwt.sign(data, process.env.ACCESS_TOKEN_SECRET, { 
+		newToken = await jwt.sign(data, process.env.ACCESS_TOKEN_SECRET, {
 			expiresIn: process.env.ACCESS_TOKEN_LIFE
 		})
 
@@ -175,7 +179,7 @@ exports.refreshToken = async (req, res, next) => {
 		})
 		next()
 	}
-	catch(e){
+	catch (e) {
 		return res.status(401).json({ error: e })
 	}
 }
@@ -188,7 +192,7 @@ exports.me = async (req, res, next) => {
 			const data = await jwt.verify(currentToken, process.env.ACCESS_TOKEN_SECRET);
 			res.status(200).json({ success: false, data: data })
 			next()
-		} catch(err) {
+		} catch (err) {
 			res.status(500).json({ auth: false, message: 'Failed to authenticate token.' })
 			next()
 		}
@@ -203,9 +207,9 @@ exports.signOut = async (req, res, next) => {
 		const currentToken = req.headers.authorization.split(" ")[1]
 		try {
 			const data = await jwt.verify(currentToken, process.env.ACCESS_TOKEN_SECRET);
-			res.status(200).json({ success: true, message: 'Signout success', data: data})
+			res.status(200).json({ success: true, message: 'Signout success', data: data })
 			next()
-		} catch(err) {
+		} catch (err) {
 			res.status(500).json({ success: false, message: 'Failed to authenticate token' })
 			next()
 		}
@@ -213,4 +217,22 @@ exports.signOut = async (req, res, next) => {
 		res.status(500).json({ error: "Not Authorized" })
 		next()
 	}
+}
+
+exports.testEmail = async (req, res, next) => {
+
+	let to = ['indra.pramana@integra.co.id', 'indra.pramana@integra.co.id', 'indra.pramana@integra.co.id']
+	let cc = ''
+	let subject = 'Test'
+	let text = 'Test Text Test Text'
+
+	try {
+		const sending = await transporter(to, cc, subject, text)
+		res.status(200).json({ success: true, message: sending })
+		next()
+	} catch (err) {
+		res.status(500).json({ success: false, message: err })
+		next()
+	}
+
 }

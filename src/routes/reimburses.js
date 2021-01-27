@@ -12,7 +12,7 @@ router.get('/reimburse/details/:batch', verify, reimbursesController.listDetails
 router.get('/policy/:policyId/reimburses/members', verify, reimbursesController.listMembers)
 
 router.post('/reimburses', verify, reimbursesController.createReimburse)
-router.put('/reimburse/:id', verify, reimbursesController.editReimburse)
+router.put('/reimburse/:id', verify, reimbursesController.updateReimburse)
 router.delete('/reimburse/:id', verify, reimbursesController.deleteReimburse)
 
 module.exports = router

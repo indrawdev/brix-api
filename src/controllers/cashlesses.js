@@ -12,41 +12,41 @@ exports.listCashlesses = async (req, res, next) => {
 
 	await Cashless.findAndCountAll({
 		include: CashlessMember,
-		where: { policy_id : policyId, is_active: 1 }, 
+		where: { policy_id: policyId, is_active: 1 },
 		order: [
 			['excess_id', 'DESC']
-		], 
-		offset: offset, limit: limit 
+		],
+		offset: offset, limit: limit
 	})
-	.then(results => {
-		res.status(200).json({ success: true, data: results })
-		next()
-	})
-	.catch(err => {
-		res.status(400).json({ success: false, message: err })
-		next()
-	})
+		.then(results => {
+			res.status(200).json({ success: true, data: results })
+			next()
+		})
+		.catch(err => {
+			res.status(400).json({ success: false, message: err })
+			next()
+		})
 }
 
 exports.getCashless = async (req, res, next) => {
 	const cashlessId = req.params.id
 
-	await Cashless.findByPk(cashlessId, { 
+	await Cashless.findByPk(cashlessId, {
 		include: [Client, Policy]
 	})
-	.then(result => {
-		if (result) {
-			res.status(200).json({ success: true, data: result })
+		.then(result => {
+			if (result) {
+				res.status(200).json({ success: true, data: result })
+				next()
+			} else {
+				res.status(404).json({ success: false, message: 'Not found' })
+				next()
+			}
+		})
+		.catch(err => {
+			res.status(500).json({ success: false, message: err })
 			next()
-		} else {
-			res.status(404).json({ success: false, message: 'Not found' })
-			next()
-		}
-	})
-	.catch(err => {
-		res.status(400).json({ success: false, message: err })
-		next()
-	})
+		})
 }
 
 exports.listDetails = async (req, res, next) => {
@@ -54,7 +54,7 @@ exports.listDetails = async (req, res, next) => {
 
 	let offset = parseInt(req.query.offset) || 1
 	let limit = parseInt(req.query.limit) || 10
-	let search  = req.query.search
+	let search = req.query.search
 
 	await CashlessMember.findAndCountAll({
 		where: {
@@ -68,14 +68,14 @@ exports.listDetails = async (req, res, next) => {
 		],
 		offset: offset, limit: limit
 	})
-	.then(results => {
-		res.status(200).json({ success: true, data: results })
-		next()
-	})
-	.catch(err => {
-		res.status(400).json({ success: false, data: err })
-		next()
-	})
+		.then(results => {
+			res.status(200).json({ success: true, data: results })
+			next()
+		})
+		.catch(err => {
+			res.status(400).json({ success: false, data: err })
+			next()
+		})
 }
 
 exports.listMembers = async (req, res, next) => {
@@ -104,14 +104,14 @@ exports.listMembers = async (req, res, next) => {
 		],
 		offset: offset, limit: limit
 	})
-	.then(results => { 
-		res.status(200).json({ success: true, data: results })
-		next()
-	})
-	.catch(err => { 
-		res.status(400).json({ success: false, data: err })
-		next()
-	})
+		.then(results => {
+			res.status(200).json({ success: true, data: results })
+			next()
+		})
+		.catch(err => {
+			res.status(400).json({ success: false, data: err })
+			next()
+		})
 }
 
 exports.createCashless = async (req, res, next) => {
@@ -126,37 +126,68 @@ exports.createCashless = async (req, res, next) => {
 		'total_excess': data.total_excess,
 		'total_unpaid': data.total_unpaid,
 		'total_paid': data.total_paid,
+		'received_date': data.received_date,
+		'followup_date': data.followup_date,
+		'due_date': data.followup_date,
 		'created_by': data.user,
 		'created_at': new Date()
-	}).then(result => { 
-		res.status(201).json({ success: true, data: result })
-		next()
-	}).catch(err => { 
-		res.status(500).json({ success: false, data: err })
-		next()
 	})
+		.then(result => {
+			res.status(201).json({ success: true, data: result })
+			next()
+		})
+		.catch(err => {
+			res.status(500).json({ success: false, data: err })
+			next()
+		})
 
 }
 
 exports.updateCashless = async (req, res, next) => {
+	const excessId = req.params.id
+
 	const data = JSON.parse(JSON.stringify(req.body))
+
 	await CashlessMember.update({
+		'currency': data.currency,
+		'total_case': data.total_case,
+		'total_excess': data.total_excess,
+		'total_unpaid': data.total_unpaid,
+		'total_paid': data.total_paid,
+		'received_date': data.received_date,
+		'followup_date': data.followup_date,
+		'due_date': data.followup_date,
+		'updated_by': data.user,
+		'updated_at': new Date()
+	}, {
 		where: {
-	
+			'excess_id': excessId
 		}
-	}).then(result => { 
+	}).then(result => {
 		res.status(200).json({ success: true, data: result })
 		next()
-	}).catch(err => { 
+	}).catch(err => {
 		res.status(500).json({ success: false, data: err })
 		next()
 	})
 }
 
 exports.deleteCashless = async (req, res, next) => {
-	await CashlessMember.delete({}).then(result => { 
-		res.status()
-	}).catch(err => { 
+	const excessId = req.params.id
 
+	await CashlessMember.update({
+		'is_active': '0'
+	}, {
+		where: {
+			'excess_id': excessId
+		}
 	})
+		.then(result => {
+			res.status(200).json({ success: true, data: result })
+			next()
+		})
+		.catch(err => {
+			res.status(500).json({ success: false, data: err })
+			next()
+		})
 }

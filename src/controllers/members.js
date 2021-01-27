@@ -28,6 +28,7 @@ exports.listMembers = async (req, res, next) => {
 	})
 	.catch(err => {
 		res.status(400).json({ success: false, message: err })
+		next()
 	})
 }
 
@@ -48,7 +49,8 @@ exports.getMember = async (req, res, next) => {
 		}
 	})
 	.catch(err => {
-		res.status(400).json({ success: false, message: err })
+		res.status(500).json({ success: false, message: err })
+		next()
 	})
 }
 
@@ -71,7 +73,7 @@ exports.listDependents = async (req, res, next) => {
 		next()
 	})
 	.catch(err => {
-		res.status(400).json({ success: false, message: err })
+		res.status(500).json({ success: false, message: err })
 		next()
 	})
 }
@@ -93,7 +95,7 @@ exports.getDependent = async (req, res, next) => {
 		}
 	})
 	.catch(err => {
-		res.status(400).json({ success: false, message: err })
+		res.status(500).json({ success: false, message: err })
 		next()
 	})
 }
@@ -123,6 +125,6 @@ exports.listMembersAndDependents = async (req, res, next) => {
 		next()
 	})
 	.catch(err => {
-		res.status(400).json({ success: false, message: err })
+		res.status(500).json({ success: false, message: err })
 	})
 }

@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken')
 
 exports.verify = async (req, res, next) => {
 	if (typeof req.headers.authorization !== "undefined") {
+		
 		let accessToken = req.headers.authorization.split(" ")[1]
 
 		try {

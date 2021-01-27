@@ -7,9 +7,9 @@ const getCount = async () => {
 			where: {
 				counter_id: 1
 			}
-	}).then(result => {
-		return result.counter_value
-	})
+		}).then(result => {
+			return result.counter_value
+		})
 
 		return count
 	} catch (err) {
@@ -17,10 +17,10 @@ const getCount = async () => {
 	}
 }
 
-const setCount = async (number) => { 
+const setCount = async (number) => {
 	await Counter.update({
 		created_by: 0
-	},{
+	}, {
 		where: {
 			counter_id: 1
 		}
