@@ -130,6 +130,12 @@ exports.createReimburse = async (req, res, next) => {
 			res.status(500).json({ success: false, data: err })
 			next()
 		})
+
+	await Reimburse.create({
+		'batch_code': ''
+	}).then(result => { 
+		
+	})
 }
 
 exports.updateReimburse = async (req, res, next) => {
