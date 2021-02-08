@@ -9,7 +9,7 @@ const Experience = require('../models/experience')
 const Reference = require('../models/reference')
 
 exports.listEmployees = async (req, res, next) => {
-	let offset = parseInt(req.query.offset) || 1
+	let offset = parseInt(req.query.offset) || 0
 	let limit = parseInt(req.query.limit) || 10
 	let search = req.query.search
 
