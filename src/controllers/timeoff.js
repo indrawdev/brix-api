@@ -25,16 +25,34 @@ exports.listTimeOffs = async (req, res, next) => {
 		})
 }
 
+exports.getTimeOff = async (req, res, next) => { 
+	const timeoffId = parseInt(req.params.id)
+
+	await Timeoff.findByPk(timeoffId)
+	.then(result => {
+		if (result) {
+			res.status(200).json({ success: true, data: result })
+			next()
+		} else {
+			res.status(404).json({ success: false, message: 'Not found' })
+			next()
+		}
+	})
+	.catch(err => {
+		res.status(400).json({ success: false, message: err })
+		next()
+	})
+}
+
 exports.createTimeOff = async (req, res, next) => {
-	const employeeId = req.params.id
 	const data = JSON.parse(JSON.stringify(req.body))
 
 	await Timeoff.create({
-		'employee_id': employeeId,
-		'type_request': data.type,
-		'effective_date': data.effective,
+		'employee_id': data.employee_id,
+		'type_request': data.type_request,
+		'effective_date': data.effective_date,
 		'note': data.note,
-		'created_by': data.user,
+		'created_by': data.user_id,
 		'created_at': new Date()
 	}).then(result => { 
 		res.status(201).json({ success: true, data: result })
@@ -47,14 +65,14 @@ exports.createTimeOff = async (req, res, next) => {
 }
 
 exports.updateTimeOff = async (req, res, next) => {
-	const timeoffId = req.params.id
+	const timeoffId = parseInt(req.params.id)
 	const data = JSON.parse(JSON.stringify(req.body))
 
 	await Timeoff.update({
-		'type': data.type,
-		'effective': data.effective,
+		'type_request': data.type_request,
+		'effective_date': data.effective_date,
 		'note': data.note,
-		'user': data.user
+		'user': data.user_id
 	}, {
 		where: {
 			'timeoff_id': timeoffId
