@@ -11,6 +11,7 @@ const Reference = require('../models/reference')
 exports.listEmployees = async (req, res, next) => {
 	let offset = parseInt(req.query.offset) || 0
 	let limit = parseInt(req.query.limit) || 10
+
 	let search = req.query.search
 
 	await Employee.findAndCountAll({
@@ -36,7 +37,7 @@ exports.listEmployees = async (req, res, next) => {
 }
 
 exports.getEmployee = async (req, res, next) => {
-	const employeeId = req.params.id
+	const employeeId = parseInt(req.params.id)
 
 	await Employee.findByPk(employeeId, {
 		include: [Family, File, Formal, Informal, Experience, {
@@ -62,9 +63,9 @@ exports.getEmployee = async (req, res, next) => {
 }
 
 exports.listFamilies = async (req, res, next) => {
-	const employeeId = req.params.id
+	const employeeId = parseInt(req.params.eid)
 
-	let offset = parseInt(req.query.offset) || 1
+	let offset = parseInt(req.query.offset) || 0
 	let limit = parseInt(req.query.limit) || 10
 
 	await Family.findAndCountAll({
@@ -90,15 +91,15 @@ exports.createFamily = async (req, res, next) => {
 	const data = JSON.parse(JSON.stringify(req.body))
 
 	await Family.create({
-		employee_id: data.employee,
-		family_name: data.name,
-		family_dob: data.dob,
-		family_relation: data.relation,
-		family_marital: data.marital,
-		family_gender: data.gender,
-		family_religion: data.religion,
-		created_by: data.user,
-		created_at: new Date()
+		'employee_id': data.employee_id,
+		'family_name': data.family_name,
+		'family_dob': data.family_dob,
+		'family_relation': data.family_relation,
+		'family_marital': data.family_marital,
+		'family_gender': data.family_gender,
+		'family_religion': data.family_religion,
+		'created_by': data.user_id,
+		'created_at': new Date()
 	})
 		.then(results => {
 			res.status(200).json({ success: true, data: results })
@@ -111,40 +112,39 @@ exports.createFamily = async (req, res, next) => {
 }
 
 exports.updateFamily = async (req, res, next) => {
-	const employeeId = req.params.id
-	const familyId = req.params.fid
+	const familyId = parseInt(req.params.id)
 
-	const {
-		name,
-		dob,
-		relation,
-		marital,
-		gender,
-		religion,
-	} = JSON.parse(JSON.stringify(req.body))
+	const data = JSON.parse(JSON.stringify(req.body))
 
 	await Family.update({
-		'name': name,
-		'dob': dob,
-		'relation': relation,
-		'marital': marital,
-		'gender': gender,
-		'religion': religion
+		'family_name': data.family_name,
+		'family_dob': data.family_dob,
+		'family_relation': data.family_relation,
+		'family_marital': data.family_marital,
+		'family_gender': data.family_gender,
+		'family_religion': data.family_religion,
+		'updated_by': data.user_id,
+		'updated_at': new Date()
 	}, {
 		where: {
-			employee_id: employeeId,
 			family_id: familyId
 		}
 	})
+		.then(results => {
+			res.status(200).json({ success: true, data: results })
+			next()
+		})
+		.catch(err => {
+			res.status(500).json({ success: false, message: err })
+			next()
+		})
 }
 
 exports.deleteFamily = async (req, res, next) => {
-	const employeeId = req.params.id
-	const familyId = req.params.fid
+	const familyId = parseInt(req.params.id)
 
 	await Family.delete({
 		where: {
-			employee_id: employeeId,
 			family_id: familyId
 		}
 	})
@@ -159,9 +159,9 @@ exports.deleteFamily = async (req, res, next) => {
 }
 
 exports.listFiles = async (req, res, next) => {
-	const employeeId = req.params.id
+	const employeeId = parseInt(req.params.eid)
 
-	let offset = parseInt(req.query.offset) || 1
+	let offset = parseInt(req.query.offset) || 0
 	let limit = parseInt(req.query.limit) || 10
 
 	await File.findAndCountAll({
@@ -184,34 +184,42 @@ exports.listFiles = async (req, res, next) => {
 }
 
 exports.createFile = async (req, res, next) => {
-	const employeeId = req.params.id
-
-	const { fileName, user } = JSON.parse(JSON.stringify(req.body))
+	const data = JSON.parse(JSON.stringify(req.body))
 
 	await File.create({
-		'employee_id': employeeId,
-		'filename': fileName,
-		'created_by': user,
+		'employee_id': data.employee_id,
+		'filename': data.filename,
+		'created_by': data.user_id,
 		'created_at': new Date()
+	}).then(result => {
+		res.status(200).json({ success: true, data: result })
+		next()
+	}).catch(err => {
+		res.status(500).json({ success: false, message: err })
+		next()
 	})
 }
 
 exports.deleteFile = async (req, res, next) => {
-	const employeeId = req.params.id
-	const fileId = req.params.fid
+	const fileId = parseInt(req.params.id)
 
 	await File.delete({
 		where: {
-			'employee_id': employeeId,
 			'file_id': fileId
 		}
-	}).then(result => { })
+	}).then(result => {
+		res.status(200).json({ success: true, data: result })
+		next()
+	}).catch(err => {
+		res.status(500).json({ success: false, message: err })
+		next()
+	})
 }
 
 exports.listFormals = async (req, res, next) => {
-	const employeeId = req.params.id
+	const employeeId = parseInt(req.params.id)
 
-	let offset = parseInt(req.query.offset) || 1
+	let offset = parseInt(req.query.offset) || 0
 	let limit = parseInt(req.query.limit) || 10
 
 	await Formal.findAndCountAll({
@@ -237,14 +245,14 @@ exports.createFormal = async (req, res, next) => {
 	const data = JSON.parse(JSON.stringify(req.body))
 
 	await Formal.create({
-		'employee_id': data.employee,
+		'employee_id': data.employee_id,
 		'grade': data.grade,
 		'institution': data.institution,
 		'majors': data.majors,
 		'score': data.score,
 		'start_year': data.start_year,
 		'end_year': data.end_year,
-		'created_by': data.user,
+		'created_by': data.user_id,
 		'created_at': new Date()
 	})
 		.then(result => {
@@ -258,8 +266,7 @@ exports.createFormal = async (req, res, next) => {
 }
 
 exports.updateFormal = async (req, res, next) => {
-	const employeeId = req.params.id
-	const formalId = req.params.fid
+	const formalId = parseInt(req.params.id)
 
 	const data = JSON.parse(JSON.stringify(req.body))
 
@@ -270,11 +277,10 @@ exports.updateFormal = async (req, res, next) => {
 		'score': data.score,
 		'start_year': data.start_year,
 		'end_year': data.end_year,
-		'updated_by': data.user,
+		'updated_by': data.user_id,
 		'updated_at': new Date()
 	}, {
 		where: {
-			'employee_id': employeeId,
 			'formal_id': formalId
 		}
 	}).then(result => {
@@ -287,12 +293,10 @@ exports.updateFormal = async (req, res, next) => {
 }
 
 exports.deleteFormal = async (req, res, next) => {
-	const employeeId = req.params.id
-	const formalId = req.params.fid
+	const formalId = parseInt(req.params.id)
 
 	await Formal.delete({
 		where: {
-			'employee_id': employeeId,
 			'formal_id': formalId
 		}
 	}).then(result => {
@@ -305,9 +309,9 @@ exports.deleteFormal = async (req, res, next) => {
 }
 
 exports.listInformals = async (req, res, next) => {
-	const employeeId = req.params.id
+	const employeeId = parseInt(req.params.eid)
 
-	let offset = parseInt(req.query.offset) || 1
+	let offset = parseInt(req.query.offset) || 0
 	let limit = parseInt(req.query.limit) || 10
 
 	await Informal.findAndCountAll({
@@ -330,12 +334,10 @@ exports.listInformals = async (req, res, next) => {
 }
 
 exports.createInformal = async (req, res, next) => {
-	const employeeId = req.params.id
-
 	const data = JSON.parse(JSON.stringify(req.body))
 
 	await Informal.create({
-		'employee_id': employeeId,
+		'employee_id': data.employee_id,
 		'education': data.education,
 		'held_by': data.held_by,
 		'start_date': data.start_date,
@@ -344,7 +346,7 @@ exports.createInformal = async (req, res, next) => {
 		'fee': data.fee,
 		'description': data.description,
 		'attach_file': data.attach_file,
-		'created_by': data.user,
+		'created_by': data.user_id,
 		'created_at': new Date()
 	}).then(result => {
 		res.status(201).json({ success: true, data: result })
@@ -356,8 +358,7 @@ exports.createInformal = async (req, res, next) => {
 }
 
 exports.updateInformal = async (req, res, next) => {
-	const employeeId = req.params.id
-	const informalId = req.params.fid
+	const informalId = parseInt(req.params.id)
 
 	const data = JSON.parse(JSON.stringify(req.body))
 
@@ -370,11 +371,10 @@ exports.updateInformal = async (req, res, next) => {
 		'fee': data.fee,
 		'description': data.description,
 		'attach_file': data.attach_file,
-		'updated_by': data.user,
+		'updated_by': data.user_id,
 		'updated_at': new Date()
 	}, {
 		where: {
-			'employee_id': employeeId,
 			'informal_id': informalId
 		}
 	}).then(result => {
@@ -387,12 +387,10 @@ exports.updateInformal = async (req, res, next) => {
 }
 
 exports.deleteInformal = async (req, res, next) => {
-	const employeeId = req.params.id
-	const informalId = req.params.fid
+	const informalId = parseInt(req.params.id)
 
 	await Informal.delete({
 		where: {
-			'employee_id': employeeId,
 			'informal_id': informalId
 		}
 	}).then(result => {
@@ -405,9 +403,9 @@ exports.deleteInformal = async (req, res, next) => {
 }
 
 exports.listExperiences = async (req, res, next) => {
-	const employeeId = req.params.id
+	const employeeId = parseInt(req.params.eid)
 
-	let offset = parseInt(req.query.offset) || 1
+	let offset = parseInt(req.query.offset) || 0
 	let limit = parseInt(req.query.limit) || 10
 
 	await Experience.findAndCountAll({
@@ -433,12 +431,12 @@ exports.createExperience = async (req, res, next) => {
 	const data = JSON.parse(JSON.stringify(req.body))
 
 	await Experience.create({
-		'employee_id': data.employee,
-		'company_name': data.company,
-		'job_position': data.position,
-		'from_date': data.from,
-		'to_date': data.to,
-		'created_by': data.user,
+		'employee_id': data.employee_id,
+		'company_name': data.company_name,
+		'job_position': data.job_position,
+		'from_date': data.from_date,
+		'to_date': data.to_date,
+		'created_by': data.user_id,
 		'created_at': new Date()
 	}).then(result => {
 		res.status(201).json({ success: true, data: result })
@@ -450,22 +448,19 @@ exports.createExperience = async (req, res, next) => {
 }
 
 exports.updateExperience = async (req, res, next) => {
-	const employeeId = req.params.id
-	const experienceId = req.params.fid
+	const experienceId = parseInt(req.params.id)
 
 	const data = JSON.parse(JSON.stringify(req.body))
 
 	await Experience.update({
-		'empployee': data.employee,
-		'company': data.company,
-		'position': data.position,
-		'from': data.from,
-		'to': data.to,
-		'updated_by': data.user,
+		'company_name': data.company_name,
+		'job_position': data.job_position,
+		'from_date': data.from_date,
+		'to_date': data.to_date,
+		'updated_by': data.user_id,
 		'updated_at': new Date()
 	}, {
 		where: {
-			'employee_id': employeeId,
 			'experience_id': experienceId
 		}
 	}).then(result => {
@@ -479,12 +474,10 @@ exports.updateExperience = async (req, res, next) => {
 }
 
 exports.deleteExperience = async (req, res, next) => {
-	const employeeId = req.params.id
-	const experienceId = req.params.fid
+	const experienceId = parseInt(req.params.id)
 
 	await Experience.delete({
 		where: {
-			'employee_id': employeeId,
 			'experience_id': experienceId
 		}
 	}).then(result => {

@@ -10,7 +10,7 @@ exports.listReimburses = async (req, res, next) => {
 
 	const policyId = req.params.policyId
 
-	let offset = parseInt(req.query.offset) || 1
+	let offset = parseInt(req.query.offset) || 0
 	let limit = parseInt(req.query.limit) || 10
 
 	await Reimburse.findAndCountAll({
@@ -56,7 +56,7 @@ exports.getReimburse = async (req, res, next) => {
 exports.listDetails = async (req, res, next) => {
 	const batch = req.params.batch
 
-	let offset = parseInt(req.query.offset) || 1
+	let offset = parseInt(req.query.offset) || 0
 	let limit = parseInt(req.query.limit) || 10
 	let search = req.query.search || ''
 
@@ -85,7 +85,7 @@ exports.listDetails = async (req, res, next) => {
 exports.listMembers = async (req, res, next) => {
 	const policyId = req.params.policyId
 
-	let offset = parseInt(req.query.offset) || 1
+	let offset = parseInt(req.query.offset) || 0
 	let limit = parseInt(req.query.limit) || 10
 	let search = req.query.search
 

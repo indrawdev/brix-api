@@ -4,7 +4,7 @@ const Insurance = require('../models/insurance')
 
 exports.listPolicies = async (req, res, next) => {
 
-	let offset = parseInt(req.query.offset) || 1
+	let offset = parseInt(req.query.offset) || 0
 	let limit = parseInt(req.query.limit) || 10
 
 	await Policy.findAndCountAll({

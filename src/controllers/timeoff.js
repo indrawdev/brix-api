@@ -1,9 +1,9 @@
 const Timeoff = require('../models/timeoff')
 
 exports.listTimeOffs = async (req, res, next) => {
-	const employeeId = parseInt(req.params.employeeId)
+	const employeeId = parseInt(req.params.eid)
 
-	let offset = parseInt(req.query.offset) || 1
+	let offset = parseInt(req.query.offset) || 0
 	let limit = parseInt(req.query.limit) || 10
 
 	await Timeoff.findAndCountAll({

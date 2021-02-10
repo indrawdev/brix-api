@@ -3,7 +3,7 @@ const Attendance = require('../models/attendance')
 exports.listAttendances = async (req, res, next) => {
 	const employeeId = parseInt(req.params.eid)
 
-	let offset = parseInt(req.query.offset) || 1
+	let offset = parseInt(req.query.offset) || 0
 	let limit = parseInt(req.query.limit) || 10
 
 	await Attendance.findAndCountAll({
@@ -25,7 +25,7 @@ exports.listAttendances = async (req, res, next) => {
 }
 
 exports.getAttendance = async (req, res, next) => {
-	const attendanceId = req.params.id
+	const attendanceId = parseInt(req.params.id)
 
 	await Attendance.findByPk(attendanceId)
 		.then(result => {
@@ -44,14 +44,13 @@ exports.getAttendance = async (req, res, next) => {
 }
 
 exports.createAttendance = async (req, res, next) => {
-	const employeeId = req.params.id
 	const data = JSON.parse(JSON.stringify(req.body))
 
 	await Attendance.create({
-		'employee_id': employeeId,
-		'type_request': data.type,
-		'attendance_status': data.status,
-		'created_by': data.user,
+		'employee_id': data.employee_id,
+		'type_request': data.type_request,
+		'attendance_status': data.attendance_status,
+		'created_by': data.user_id,
 		'created_at': new Date()
 	})
 		.then(result => {
@@ -65,19 +64,17 @@ exports.createAttendance = async (req, res, next) => {
 }
 
 exports.updateAttendance = async (req, res, next) => {
-	const employeeId = req.params.id
-	const attendanceId = req.params.aid
+	const attendanceId = parseInt(req.params.id)
 
 	const data = JSON.parse(JSON.stringify(req.body))
 
 	await Attendance.update({
-		'type': data.type,
-		'status': data.status,
-		'updated_by': data.user,
+		'type_request': data.type_request,
+		'attendance_status': data.attendance_status,
+		'updated_by': data.user_id,
 		'updated_at': new Date()
 	}, {
 		where: {
-			'employee_id': employeeId,
 			'attendance_id': attendanceId
 		}
 	})
@@ -92,12 +89,10 @@ exports.updateAttendance = async (req, res, next) => {
 }
 
 exports.deleteAttendance = async (req, res, next) => {
-	const employeeId = req.params.id
-	const attendanceId = req.params.aid
+	const attendanceId = parseInt(req.params.id)
 
 	await Attendance.delete({
 		where: {
-			'employee_id': employeeId,
 			'attendance_id': attendanceId
 		}
 	})
