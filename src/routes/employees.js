@@ -13,7 +13,7 @@ router.get('/employee/:id', verify, employeeController.getEmployee)
 // route families
 router.get('/families/:eid', verify, employeeController.listFamilies)
 router.post('/family', verify, employeeController.createFamily)
-router.put('/family/:id', verify, employeeControler.updateFamily)
+router.put('/family/:id', verify, employeeController.updateFamily)
 router.delete('/family/:id', verify, employeeController.deleteFamily)
 
 // route files 
