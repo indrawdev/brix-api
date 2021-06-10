@@ -72,7 +72,7 @@ exports.updateTimeOff = async (req, res, next) => {
 		'type_request': data.type_request,
 		'effective_date': data.effective_date,
 		'note': data.note,
-		'user': data.user_id
+		'user_id': data.user_id
 	}, {
 		where: {
 			'timeoff_id': timeoffId

@@ -5,12 +5,12 @@ const jwt = require('jsonwebtoken')
 
 exports.verify = async (req, res, next) => {
 	if (typeof req.headers.authorization !== "undefined") {
-		
+
 		let accessToken = req.headers.authorization.split(" ")[1]
 
 		try {
 			await jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET, (err) => {
-				if (err) {  
+				if (err) {
 					return res.status(500).json({ error: "Not Authorized" })
 				}
 				return next()
