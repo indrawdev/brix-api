@@ -36,6 +36,13 @@ const Formal = require('./src/models/formal')
 const Informal = require('./src/models/informal')
 const Experience = require('./src/models/experience')
 
+// Models for BRIX
+const Group = require('./src/models/group')
+const Pipeline = require('./src/models/pipeline')
+const Request = require('./src/models/request')
+const Proposal = require('./src/models/proposal')
+const Placing = require('./src/models/placing')
+
 // Associations for Client Portal
 Client.hasMany(UserClient, { foreignKey: 'client_id' })
 UserClient.belongsTo(Client, { foreignKey: 'client_id' })
@@ -82,6 +89,24 @@ Informal.belongsTo(Employee, { foreignKey: 'employee_id' })
 Employee.hasMany(Experience, { foreignKey: 'employee_id' })
 Experience.belongsTo(Employee, { foreignKey: 'employee_id' })
 
+// Associations for BRIX
+Pipeline.hasMany(Request, { foreignKey: 'pipeline_id' })
+Request.belongsTo(Pipeline, { foreignKey: 'pipeline_id' })
+Client.hasMany(Request, { foreignKey: 'client_id' })
+Request.belongsTo(Client, { foreignKey: 'client_id' })
+Group.hasOne(Pipeline, { foreignKey: 'group_id', sourceKey: 'group_id' })
+Pipeline.belongsTo(Group, { foreignKey: 'group_id', targetKey: 'group_id' })
+Request.hasOne(Proposal, { foreignKey: 'request_id', sourceKey: 'request_id' })
+Proposal.belongsTo(Request, { foreignKey: 'request_id', targetKey: 'request_id' })
+Employee.hasOne(Request, { foreignKey: 'employee_id', sourceKey: 'employee_id' })
+Request.belongsTo(Employee, { foreignKey: 'employee_id', targetKey: 'employee_id' })
+Request.hasOne(Placing, { foreignKey: 'request_id', sourceKey: 'request_id' })
+Placing.belongsTo(Request, { foreignKey: 'request_id', targetKey: 'request_id' })
+Proposal.hasOne(Placing, { foreignKey: 'proposal_id', sourceKey: 'proposal_id' })
+Placing.belongsTo(Proposal, { foreignKey: 'proposal_id', targetKey: 'proposal_id' })
+Insurance.hasMany(Placing, { foreignKey: 'insurance_id' })
+Placing.belongsTo(Insurance, { foreignKey: 'insurance_id' })
+
 // init routes for client
 const frontRoutes = require('./src/routes/front')
 const authRoutes = require('./src/routes/auth')
@@ -98,6 +123,14 @@ const dashboardRoutes = require('./src/routes/dashboard')
 const employeeRoutes = require('./src/routes/employees')
 const attendanceRoutes = require('./src/routes/attendances')
 const timeoffRoutes = require('./src/routes/timeoffs')
+
+// init routes for BRIX
+const pipelineRoutes = require('./src/routes/pipeline')
+const requestRoutes = require('./src/routes/request')
+const renewalRoutes = require('./src/routes/renewal')
+const releaseRoutes = require('./src/routes/release')
+const placingRoutes = require('./src/routes/placing')
+const quotationRoutes = require('./src/routes/quotation')
 
 const port = process.env.APP_PORT || 3000
 
@@ -125,6 +158,14 @@ app.use('/v1', dashboardRoutes)
 app.use('/v2', employeeRoutes)
 app.use('/v2', attendanceRoutes)
 app.use('/v2', timeoffRoutes)
+
+// routes brix
+app.use('/v3', pipelineRoutes)
+app.use('/v3', requestRoutes)
+app.use('/v3', renewalRoutes)
+app.use('/v3', releaseRoutes)
+app.use('/v3', placingRoutes)
+app.use('/v3', quotationRoutes)
 
 sequelize
 	.sync({ force: false })

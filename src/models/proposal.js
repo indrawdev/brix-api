@@ -13,31 +13,33 @@ const Proposal = sequelize.define('proposals', {
 		type: DataTypes.INTEGER,
 		allowNull: false
 	},
-	document_name: {
-		type: DataTypes.STRING,
-		allowNull: true
-	},
 	file_upload: {
 		type: DataTypes.STRING,
 		allowNull: true
 	},
 	is_booking: {
-		type: DataTypes.ENUM
+		type: DataTypes.ENUM,
+		values: ['0', '1']
 	},
 	is_document: {
-		type: DataTypes.ENUM
+		type: DataTypes.ENUM,
+		values: ['0', '1']
 	},
 	is_screenshot: {
-		type: DataTypes.ENUM
+		type: DataTypes.ENUM,
+		values: ['0', '1']
 	},
 	is_send: {
-		type: DataTypes.ENUM
+		type: DataTypes.ENUM,
+		values: ['0', '1']
 	},
 	is_accept: {
-		type: DataTypes.ENUM
+		type: DataTypes.ENUM,
+		values: ['0', '1']
 	},
 	is_action: {
-		type: DataTypes.ENUM
+		type: DataTypes.ENUM,
+		values: ['N', 'R', 'C', 'L', 'W']
 	},
 	closing_at: {
 		type: DataTypes.DATEONLY

@@ -41,13 +41,16 @@ const Request = sequelize.define('requests', {
 		type: DataTypes.DECIMAL(10)
 	},
 	is_send: {
-		type: DataTypes.ENUM
+		type: DataTypes.ENUM,
+		values: ['0', '1']
 	},
 	is_assign: {
-		type: DataTypes.ENUM
+		type: DataTypes.ENUM,
+		values: ['0', '1']
 	},
 	is_approve: {
-		type: DataTypes.ENUM
+		type: DataTypes.ENUM,
+		values: ['0', '1']
 	}
 }, {
 	tableName: 't_requests',

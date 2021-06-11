@@ -99,7 +99,7 @@ const Placing = sequelize.define('placings', {
 		type: DataTypes.DECIMAL(10)
 	}
 }, {
-	tableName: 't_placings',
+	tableName: 't_placing',
 	timestamps: false
 })
 

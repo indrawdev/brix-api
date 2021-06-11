@@ -218,21 +218,3 @@ exports.signOut = async (req, res, next) => {
 		next()
 	}
 }
-
-exports.testEmail = async (req, res, next) => {
-
-	let to = ['indra.pramana@integra.co.id', 'indra.pramana@integra.co.id', 'indra.pramana@integra.co.id']
-	let cc = ''
-	let subject = 'Test'
-	let text = 'Test Text Test Text'
-
-	try {
-		const sending = await transporter(to, cc, subject, text)
-		res.status(200).json({ success: true, message: sending })
-		next()
-	} catch (err) {
-		res.status(500).json({ success: false, message: err })
-		next()
-	}
-
-}

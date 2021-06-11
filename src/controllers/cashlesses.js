@@ -95,7 +95,7 @@ exports.listMembers = async (req, res, next) => {
 			}
 		},
 		where: {
-			member_name: {
+			request_code: {
 				[Op.like]: `%${search}%`
 			}
 		},
