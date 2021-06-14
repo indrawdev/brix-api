@@ -126,6 +126,7 @@ const timeoffRoutes = require('./src/routes/timeoffs')
 
 // init routes for BRIX
 const pipelineRoutes = require('./src/routes/pipeline')
+const prospectRoutes = require('./src/routes/prospect')
 const requestRoutes = require('./src/routes/request')
 const renewalRoutes = require('./src/routes/renewal')
 const releaseRoutes = require('./src/routes/release')
@@ -161,6 +162,7 @@ app.use('/v2', timeoffRoutes)
 
 // routes brix
 app.use('/v3', pipelineRoutes)
+app.use('/v3', prospectRoutes)
 app.use('/v3', requestRoutes)
 app.use('/v3', renewalRoutes)
 app.use('/v3', releaseRoutes)

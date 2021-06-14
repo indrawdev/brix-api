@@ -9,6 +9,5 @@ router.post('/signin', authController.signIn)
 router.get('/refresh', authController.refreshToken)
 router.get('/me', authController.me)
 router.get('/signout', authController.signOut)
-router.get('/testemail', authController.testEmail)
 
 module.exports = router

@@ -2,7 +2,7 @@ const { Op } = require('sequelize')
 const Pipeline = require('../models/pipeline')
 const Group = require('../models/group')
 
-exports.listHeadPipelines = async (req, res, next) => {
+exports.listHeadProspects = async (req, res, next) => {
 	let offset = parseInt(req.query.offset) || 0
 	let limit = parseInt(req.query.limit) || 10
 	let search = req.query.search || ''
@@ -11,7 +11,7 @@ exports.listHeadPipelines = async (req, res, next) => {
 		include: Group,
 		where: {
 			is_active: 1,
-			business_level: 'MK',
+			business_level: 'CR',
 			company_name: {
 				[Op.like]: `%${search}%`
 			},
@@ -34,7 +34,7 @@ exports.listHeadPipelines = async (req, res, next) => {
 		})
 }
 
-exports.listOwnPipelines = async (req, res, next) => {
+exports.listOwnProspects = async (req, res, next) => {
 	let offset = parseInt(req.query.offset) || 0
 	let limit = parseInt(req.query.limit) || 10
 	let search = req.query.search || ''
@@ -46,7 +46,7 @@ exports.listOwnPipelines = async (req, res, next) => {
 		where: {
 			created_by: userId,
 			is_active: 1,
-			business_level: 'MK',
+			business_level: 'CR',
 			company_name: {
 				[Op.like]: `%${search}%`
 			},
@@ -67,5 +67,4 @@ exports.listOwnPipelines = async (req, res, next) => {
 			res.status(400).json({ success: false, data: err })
 			next()
 		})
-
 }
