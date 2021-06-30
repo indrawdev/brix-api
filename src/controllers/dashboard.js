@@ -5,7 +5,12 @@ const Cashless = require('../models/cashless')
 const Member = require('../models/member')
 const Dependent = require('../models/dependent')
 
-const totalClaim = async (req, res, next) => { 
+const Pipeline = require('../models/pipeline')
+const Request = require('../models/request')
+const Proposal = require('../models/proposal')
+const Placing = require('../models/placing')
+
+exports.totalClaim = async (req, res, next) => {
 	const clientId = parseInt(req.query.client)
 	const policyId = parseInt(req.query.policy)
 
@@ -27,7 +32,7 @@ const totalClaim = async (req, res, next) => {
 				['created_at', 'DESC']
 			]
 		})
-		
+
 		const cashless = await Cashless.findAll({
 			attributes: [
 				[sequelize.fn('MONTHNAME', sequelize.col('created_at')), 'month'],
@@ -44,7 +49,7 @@ const totalClaim = async (req, res, next) => {
 				['created_at', 'ASC']
 			]
 		})
-   
+
 		res.status(200).json({
 			success: true,
 			reimburses: reimburses,
@@ -58,7 +63,7 @@ const totalClaim = async (req, res, next) => {
 	}
 }
 
-const totalMember = async (req, res, next) => { 
+exports.totalMember = async (req, res, next) => {
 	const clientId = parseInt(req.query.client)
 	const policyId = parseInt(req.query.policy)
 
@@ -95,5 +100,38 @@ const totalMember = async (req, res, next) => {
 
 }
 
-exports.totalClaim = totalClaim
-exports.totalMember = totalMember
+exports.totalPipeline = async (req, res, next) => {
+	try {
+
+	} catch (err) {
+		res.status(500).json({ message: err })
+		next()
+	}
+}
+
+exports.totalRequest = async (req, res, next) => {
+	try {
+
+	} catch (err) {
+		res.status(500).json({ message: err })
+		next()
+	}
+}
+
+exports.totalProposal = async (req, res, next) => {
+	try {
+
+	} catch (err) {
+		res.status(500).json({ message: err })
+		next()
+	}
+}
+
+exports.totalPlacing = async (req, res, next) => {
+	try {
+
+	} catch (err) {
+		res.status(500).json({ message: err })
+		next()
+	}
+}

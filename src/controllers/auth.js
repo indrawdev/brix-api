@@ -6,6 +6,7 @@ const jwt = require('jsonwebtoken')
 const nodemailer = require('nodemailer')
 
 const User = require('../models/user')
+const Employee = require('../models/employee')
 const UserClient = require('../models/userclient')
 const { transporter } = require('../middlewares/transporter')
 
@@ -17,6 +18,7 @@ exports.logIn = async (req, res, next) => {
 
 	try {
 		await User.findOne({
+			include: Employee,
 			where: {
 				email: email,
 				password: hashedPass
