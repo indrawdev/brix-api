@@ -11,8 +11,7 @@ const Reference = require('../models/reference')
 exports.listEmployees = async (req, res, next) => {
 	let offset = parseInt(req.query.offset) || 0
 	let limit = parseInt(req.query.limit) || 10
-
-	let search = req.query.search
+	let search = req.query.search || ''
 
 	await Employee.findAndCountAll({
 		where: {
