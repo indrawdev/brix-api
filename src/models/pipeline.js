@@ -12,6 +12,10 @@ const Pipeline = sequelize.define('pipelines', {
 		type: DataTypes.STRING,
 		allowNull: false
 	},
+	company_type: {
+		type: DataTypes.STRING,
+		allowNull: false
+	},
 	company_name: {
 		type: DataTypes.STRING,
 		allowNull: false
