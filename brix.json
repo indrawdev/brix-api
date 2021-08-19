@@ -1,0 +1,20 @@
+{
+	"openapi": "3.0.3",
+	"info": {
+		"title": "Brix RESTful API",
+		"version": "1",
+		"description": "OpenAPI for Brix RESTful API",
+		"termsOfService": "https://integra.co.id",
+		"contact": {
+			"name": "Indra Pramana",
+			"email": "indra.pramana@integra.co.id",
+			"url": "https://integra.co.id"
+		},
+		"license": {
+			"name": "APACHE 2.0",
+			"url": "https://www.apache.org/licenses/LICENSE-2.0"
+		}
+	},
+	"server": [],
+	"path": {}
+}
